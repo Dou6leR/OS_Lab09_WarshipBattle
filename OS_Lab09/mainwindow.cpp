@@ -6,10 +6,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
 
 
-
+    //One time init
     CCell::initPixmap();
 
     scene = new QGraphicsScene;
+    //Add first shipField
     shipField1.resize(100);
     for(int x = 0; x < 10; x++)
     {
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
             scene->addItem(shipField1[x + y * 10]);
         }
     }
+    //Add second shipField
     shipField2.resize(100);
     for(int x = 0; x < 10; x++)
     {
