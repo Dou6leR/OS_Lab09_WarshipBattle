@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include "ccell.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +21,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    //Current scene
+    QGraphicsScene  *scene;
+
+    //All visible CCell items
+    QVector<CCell*> shipField1;
+    QVector<CCell*> shipField2;
+    QVector<CCell*> ships;
 };
 #endif // MAINWINDOW_H
