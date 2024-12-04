@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         for(int y = 0; y < 10; y++)
         {
             shipField1[x + y * 10] = new CCell(_cell);
-            shipField1[x + y * 10]->setPos(367 + x * CCell::SIZE,112 + y * CCell::SIZE);
+            shipField1[x + y * 10]->setPos(2 * CCell::SIZE + x * CCell::SIZE, 5 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField1[x + y * 10]);
         }
     }
@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         for(int y = 0; y < 10; y++)
         {
             shipField2[x + y * 10] = new CCell(_cell);
-            shipField2[x + y * 10]->setPos(50 + x * CCell::SIZE,112 + y * CCell::SIZE);
+            shipField2[x + y * 10]->setPos(800 - 12 * CCell::SIZE + x * CCell::SIZE, 5 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField2[x + y * 10]);
         }
     }
