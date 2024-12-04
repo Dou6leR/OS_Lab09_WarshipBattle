@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "server.h"
+#include "client.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +21,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Server* server;
+    Client* client;
+
 };
 #endif // MAINWINDOW_H
