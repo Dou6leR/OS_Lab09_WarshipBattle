@@ -18,6 +18,7 @@ SOURCES += \
 HEADERS += \
     ccell.h \
     client.h \
+    exception.h \
     mainwindow.h \
     server.h
 

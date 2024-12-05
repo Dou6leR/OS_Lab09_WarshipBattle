@@ -1,49 +1,45 @@
 #include "client.h"
+#include <QDebug>
 
-Client::Client(const std::string& path) : socket_path(path), client_socket(-1) {}
+Client::Client(const QString& path) : socket_path(path), client_socket(-1) {}
 
 Client::~Client() {
     close_connection();
 }
 
-bool Client::create_socket() {
+void Client::create_socket() {
     client_socket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (client_socket < 0) {
-        perror("Failed to create socket");
-        return false;
+        throw(Exception("Failed to create socket"));
     }
 
     memset(&server_address, 0, sizeof(server_address));
     server_address.sun_family = AF_UNIX;
-    strncpy(server_address.sun_path, socket_path.c_str(), sizeof(server_address.sun_path) - 1);
-
-    return true;
+    strncpy(server_address.sun_path, socket_path.toUtf8().data(), sizeof(server_address.sun_path) - 1);
+    qDebug() << "Client creates socket. Socket: " << client_socket;
 }
 
-bool Client::connect_to_server() {
+void Client::connect_to_server() {
     if (connect(client_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
-        perror("Connection to server failed");
-        return false;
+        throw(Exception("Connection to server failed"));
     }
-    return true;
+    qDebug() << "Client connects to server";
 }
 
-bool Client::send_data(const std::string& data) {
-    if (send(client_socket, data.c_str(), data.length(), 0) == -1) {
-        perror("Failed to send data");
-        return false;
+void Client::send_data(const QString& data) {
+    if (send(client_socket, data.toUtf8().data(), data.length(), 0) == -1) {
+        throw(Exception("Failed to send data"));
     }
-    return true;
+    qDebug() << "Client sends data to server";
 }
 
-std::string Client::receive_data() {
+QString Client::receive_data() {
     char buffer[1024] = {0};
     int bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
     if (bytes_received == -1) {
-        perror("Failed to receive data");
-        return "";
+        throw(Exception("Failed to receive data"));
     }
-    return std::string(buffer, bytes_received);
+    return QString(buffer);
 }
 
 void Client::close_connection() {

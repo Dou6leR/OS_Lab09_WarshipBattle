@@ -4,21 +4,22 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
-#include <string>
+#include <QString>
+#include "exception.h"
 
 class Client{
 public:
-    Client(const std::string& path);
+    Client(const QString& path);
     ~Client();
-    bool create_socket();
-    bool connect_to_server();
-    bool send_data(const std::string& data);
-    std::string receive_data();
+    void create_socket();
+    void connect_to_server();
+    void send_data(const QString& data);
+    QString receive_data();
     void close_connection();
     int get_socket();
 private:
     int client_socket;
-    std::string socket_path;
+    QString socket_path;
     struct sockaddr_un server_address;
 };
 
