@@ -2,6 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
+
+//UI managing
+#define W_WIDTH 800
+#define W_HIGHT 600
+enum MW_PAGES {
+    WELCOME_PAGE,
+    SHIP_PLACE_PAGE,
+    SERVER_PAGE,
+    GAME_PAGE,
+};
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,6 +28,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void switch_page(int page);
 
 private:
     Ui::MainWindow *ui;
