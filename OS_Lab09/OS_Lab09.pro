@@ -26,4 +26,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    images/testWhite.jpg
+    images/cell.png \
+    images/dot.png \
+    images/hit.png \
+    images/kill.png \
+    images/sh_1.png \
+    images/sh_2.png \
+    images/sh_3.png \
+    images/sh_4.png
