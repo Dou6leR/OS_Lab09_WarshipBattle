@@ -10,12 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     ccell.cpp \
+    client.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    server.cpp
 
 HEADERS += \
     ccell.h \
-    mainwindow.h
+    client.h \
+    exception.h \
+    mainwindow.h \
+    server.h
 
 FORMS += \
     mainwindow.ui
