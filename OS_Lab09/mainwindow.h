@@ -1,10 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-#include <QMainWindow>
 #include <QVector>
 #include "server.h"
 #include "client.h"
+#include <QMainWindow>
+#include <QPushButton>
+
+//UI managing
+#define W_WIDTH 800
+#define W_HIGHT 600
+enum MW_PAGES {
+    WELCOME_PAGE,
+    SHIP_PLACE_PAGE,
+    SERVER_PAGE,
+    GAME_PAGE,
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -27,6 +37,7 @@ public:
     void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void switch_page(int page);
 
 private slots:
 
