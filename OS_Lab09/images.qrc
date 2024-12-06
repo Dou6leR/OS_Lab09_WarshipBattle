@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/cell.png</file>
+        <file>images/dot.png</file>
+        <file>images/hit.png</file>
+        <file>images/kill.png</file>
+        <file>images/sh_1.png</file>
+        <file>images/sh_2.png</file>
+        <file>images/sh_3.png</file>
+        <file>images/sh_4.png</file>
+    </qresource>
+</RCC>

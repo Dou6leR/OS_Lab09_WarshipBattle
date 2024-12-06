@@ -27,8 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
         for(int y = 0; y < 10; y++)
         {
             shipField1[x + y * 10] = new CCell(_cell);
-            shipField1[x + y * 10]->setPos(2 * CCell::SIZE + x * CCell::SIZE, 5 * CCell::SIZE + y * CCell::SIZE);
+            shipField1[x + y * 10]->setPos(2 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField1[x + y * 10]);
+            shipField1[x + y * 10]->hide();
         }
     }
     //Add second shipField
@@ -38,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
         for(int y = 0; y < 10; y++)
         {
             shipField2[x + y * 10] = new CCell(_cell);
-            shipField2[x + y * 10]->setPos(800 - 12 * CCell::SIZE + x * CCell::SIZE, 5 * CCell::SIZE + y * CCell::SIZE);
+            shipField2[x + y * 10]->setPos(800 - 12 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField2[x + y * 10]);
         }
     }
@@ -74,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
         ships[i]->setPos(CCell::SIZE * (_sh_1 * (k - 1) + k), CCell::SIZE * (10 - j * 2));
         scene->addItem(ships[i]);
     }
+
+
 }
 
 MainWindow::~MainWindow()
@@ -136,24 +139,25 @@ void MainWindow::on_server_but_clicked()
 
     client_sockets.append(server->accept_client());
 
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]() {
-        QString data = "Your turn";
+    // QTimer* timer = new QTimer(this);
+    // connect(timer, &QTimer::timeout, this, [this]() {
+    //     QString data = "Your turn";
 
-        server->send_data(client_sockets[0], data);
-        data = server->receive_data(client_sockets[0]);
-        qDebug() << "Message from client 1: " << data;
+    //     server->send_data(client_sockets[0], data);
+    //     data = server->receive_data(client_sockets[0]);
+    //     qDebug() << "Message from client 1: " << data;
 
-        server->send_data(client_sockets[1], data);
-        data = server->receive_data(client_sockets[1]);
-        qDebug() << "Message from client 2: " << data;
-    });
+    //     server->send_data(client_sockets[1], data);
+    //     data = server->receive_data(client_sockets[1]);
+    //     qDebug() << "Message from client 2: " << data;
+    // });
 
-    timer->start(5000);
+    // timer->start(5000);
 }
 
 void MainWindow::on_player_but_clicked()
 {
+    ui->placing_View->setScene(scene);
     switch_page(SHIP_PLACE_PAGE);
 
     Client* new_client = new Client("/tmp/socket");
@@ -162,15 +166,15 @@ void MainWindow::on_player_but_clicked()
 
     new_client->connect_to_server();
 
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [new_client]() {
-        QString data = new_client->receive_data();
-        qDebug() << "Message from server: " << data;
-        sleep(5);
-        new_client->send_data("Message from client");
-    });
+    // QTimer* timer = new QTimer(this);
+    // connect(timer, &QTimer::timeout, this, [new_client]() {
+    //     QString data = new_client->receive_data();
+    //     qDebug() << "Message from server: " << data;
+    //     sleep(5);
+    //     new_client->send_data("Message from client");
+    // });
 
-    timer->start(5000);
+    // timer->start(5000);
 }
 
 

@@ -90,6 +90,16 @@
        <string>Ready</string>
       </property>
      </widget>
+     <widget class="QGraphicsView" name="placing_View">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>740</width>
+        <height>400</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="server_page">
      <widget class="QPlainTextEdit" name="server_log">
@@ -118,7 +128,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

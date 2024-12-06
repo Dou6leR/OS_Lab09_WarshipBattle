@@ -39,3 +39,6 @@ images/cell.png \
    images/sh_2.png \
    images/sh_3.png \
    images/sh_4.png
+
+RESOURCES += \
+    images.qrc
