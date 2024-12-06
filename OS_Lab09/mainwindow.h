@@ -40,7 +40,8 @@ public:
     void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void test_func();
+    void client_func();
+    void server_func();
     void switch_page(int page);
 
 private slots:
@@ -55,7 +56,7 @@ private:
 
     Server* server;
     QVector<int> client_sockets;
-    
+
     //Current scene
     QGraphicsScene  *scene;
 
@@ -72,9 +73,14 @@ public:
     Worker(MainWindow* mw) {m_mw = mw;};
     ~Worker() {m_mw = nullptr;};
 public slots:
-    void process()
+    void process_client()
     {
-        m_mw->test_func();
+        m_mw->client_func();
+        emit finished();
+    };
+    void process_server()
+    {
+        m_mw->server_func();
         emit finished();
     };
 signals:
@@ -82,6 +88,6 @@ signals:
     void error(QString err);
 private:
     MainWindow* m_mw;
-         // add your variables here
+        // add your variables here
 };
 #endif // MAINWINDOW_H

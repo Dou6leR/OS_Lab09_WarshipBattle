@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Add all ships to scene
     ships.resize(10);
     int i = 0, j = 1;
-      
+
     for(int k = 1; k <= j; k++, i++)
     {
         ships[i] = new CCell(_sh_4);
@@ -85,22 +85,22 @@ void MainWindow::switch_page(int page)
 {
     switch (page)
     {
-        case WELCOME_PAGE:
-            this->ui->mw_pages->setCurrentWidget(this->ui->welcome);
-            break;
-        case SHIP_PLACE_PAGE:
-            this->ui->mw_pages->setCurrentWidget(this->ui->ship_place);
-            break;
-        case SERVER_PAGE:
-            this->ui->mw_pages->setCurrentWidget(this->ui->server_page);
-            break;
-        case GAME_PAGE:
-            this->ui->mw_pages->setCurrentWidget(this->ui->game_page);
-            break;
-        default:
-            qDebug() << "Page switch error index";
-            //TODO: error or exception
-            break;
+    case WELCOME_PAGE:
+        this->ui->mw_pages->setCurrentWidget(this->ui->welcome);
+        break;
+    case SHIP_PLACE_PAGE:
+        this->ui->mw_pages->setCurrentWidget(this->ui->ship_place);
+        break;
+    case SERVER_PAGE:
+        this->ui->mw_pages->setCurrentWidget(this->ui->server_page);
+        break;
+    case GAME_PAGE:
+        this->ui->mw_pages->setCurrentWidget(this->ui->game_page);
+        break;
+    default:
+        qDebug() << "Page switch error index";
+        //TODO: error or exception
+        break;
     }
 }
 
@@ -126,31 +126,15 @@ void MainWindow::send_client2(){
 void MainWindow::on_server_but_clicked()
 {
     switch_page(SERVER_PAGE);
+    QThread* thread = new QThread();
+    Worker* worker = new Worker(this);
+    worker->moveToThread(thread);
+    connect( thread, &QThread::started, worker, &Worker::process_server);
+    connect( worker, &Worker::finished, thread, &QThread::quit);
+    connect( worker, &Worker::finished, worker, &Worker::deleteLater);
+    connect( thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
 
-    server = new Server("/tmp/socket");
-
-    server->create_socket();
-    server->bind_socket();
-    server->listen_for_clients();
-
-    client_sockets.append(server->accept_client());
-
-    client_sockets.append(server->accept_client());
-
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]() {
-        QString data = "Your turn";
-
-        server->send_data(client_sockets[0], data);
-        data = server->receive_data(client_sockets[0]);
-        qDebug() << "Message from client 1: " << data;
-
-        server->send_data(client_sockets[1], data);
-        data = server->receive_data(client_sockets[1]);
-        qDebug() << "Message from client 2: " << data;
-    });
-
-    timer->start(5000);
 }
 
 void MainWindow::on_player_but_clicked()
@@ -159,7 +143,7 @@ void MainWindow::on_player_but_clicked()
     QThread* thread = new QThread();
     Worker* worker = new Worker(this);
     worker->moveToThread(thread);
-    connect( thread, &QThread::started, worker, &Worker::process);
+    connect( thread, &QThread::started, worker, &Worker::process_client);
     connect( worker, &Worker::finished, thread, &QThread::quit);
     connect( worker, &Worker::finished, worker, &Worker::deleteLater);
     connect( thread, &QThread::finished, thread, &QThread::deleteLater);
@@ -167,7 +151,37 @@ void MainWindow::on_player_but_clicked()
 
 }
 
-void MainWindow::test_func()
+void MainWindow::server_func(){
+    try{
+        server = new Server("/tmp/socket");
+
+        server->create_socket();
+        server->bind_socket();
+        server->listen_for_clients();
+
+        client_sockets.append(server->accept_client());
+
+        client_sockets.append(server->accept_client());
+
+        while(true){
+            QString data = "Your turn";
+
+            server->send_data(client_sockets[0], data);
+            data = server->receive_data(client_sockets[0]);
+            qDebug() << "Message from client 1: " << data;
+
+            server->send_data(client_sockets[1], data);
+            data = server->receive_data(client_sockets[1]);
+            qDebug() << "Message from client 2: " << data;
+        }
+    }
+    catch(std::exception exc)
+    {
+        qDebug() << exc.what();
+    }
+}
+
+void MainWindow::client_func()
 {
     try
     {
@@ -193,6 +207,5 @@ void MainWindow::test_func()
 
 void MainWindow::on_ready_but_clicked()
 {
-
+    qDebug() << "On Ready Button clicked";
 }
-
