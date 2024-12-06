@@ -38,6 +38,7 @@ public:
     int _height;
     int _typeShip;
     bool isVertical=false;
+    bool isConToTable; // Check if ship connected to table
     QPixmap* cellData;
 
 
@@ -57,6 +58,9 @@ public:
     //Change type of cell
     void changeType(int type);
 
+    //Table to check ship conficts static to make shared between other ships
+    static bool* ShipTable;
+
 protected:
     //Rotate the ship
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
@@ -65,6 +69,9 @@ protected:
 private:
     //Return coordinates
     QRectF boundingRect() const;
+
+    //Check conflicts with other ships
+    bool isConflicted(int x, int y);
 
     //Paint the cell with (QPixmap *celldata)
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

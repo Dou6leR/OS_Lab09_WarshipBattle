@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     //One time init
     CCell::initPixmap();
 
+
     scene = new QGraphicsScene;
     //Add first shipField
     shipField1.resize(100);
