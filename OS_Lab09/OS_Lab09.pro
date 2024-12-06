@@ -10,12 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     ccell.cpp \
+    client.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    server.cpp
 
 HEADERS += \
     ccell.h \
-    mainwindow.h
+    client.h \
+    exception.h \
+    mainwindow.h \
+    server.h
 
 FORMS += \
     mainwindow.ui
@@ -26,4 +31,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    images/testWhite.jpg
+images/cell.png \
+   images/dot.png \
+   images/hit.png \
+   images/kill.png \
+   images/sh_1.png \
+   images/sh_2.png \
+   images/sh_3.png \
+   images/sh_4.png

@@ -10,19 +10,106 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SeaBattle</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QStackedWidget" name="mw_pages">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
       <width>800</width>
-      <height>700</height>
+      <height>550</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="welcome">
+     <widget class="QPushButton" name="server_but">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>200</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Server</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="player_but">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>290</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Player</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="game_name">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>100</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SeaBattle</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="ship_place">
+     <widget class="QPushButton" name="ready_but">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>460</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ready</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="server_page">
+     <widget class="QPlainTextEdit" name="server_log">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>740</width>
+        <height>500</height>
+       </rect>
+      </property>
+      <property name="cursorWidth">
+       <number>0</number>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="game_page"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -31,7 +118,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
