@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QVector>
+#include <QGraphicsScene>
+#include "ccell.h"
 #include "server.h"
 #include "client.h"
 #include <QMainWindow>
@@ -48,7 +50,17 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     Server* server;
     QVector<int> client_sockets;
+    
+    //Current scene
+    QGraphicsScene  *scene;
+
+    //All visible CCell items
+    QVector<CCell*> shipField1;
+    QVector<CCell*> shipField2;
+    QVector<CCell*> ships;
+
 };
 #endif // MAINWINDOW_H

@@ -21,31 +21,31 @@ CCell::CCell(int typeShip, QObject *parent) : QObject(parent), QGraphicsItem()
     switch (_typeShip)
     {
     case _cell:
-        ship = cell;
+        cellData = cell;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _sh_1:
-        ship = sh_1;
+        cellData = sh_1;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _sh_2:
-        ship = sh_2;
+        cellData = sh_2;
         _width = SIZE * 2;
         _height = SIZE;
         break;
 
     case _sh_3:
-        ship = sh_3;
+        cellData = sh_3;
         _width = SIZE * 3;
         _height = SIZE;
         break;
 
     case _sh_4:
-        ship = sh_4;
+        cellData = sh_4;
         _width = SIZE * 4;
         _height = SIZE;
         break;
@@ -83,7 +83,7 @@ void CCell::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
             setRotation(0);
             isVertical = false;
         }
-        QGraphicsItem::mousePressEvent(event);
+        Q_UNUSED(event);
     }
 }
 
@@ -94,49 +94,49 @@ void CCell::changeType(int typeShip)
     switch (_typeShip)
     {
     case _cell:
-        ship = cell;
+        cellData = cell;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _sh_1:
-        ship = sh_1;
+        cellData = sh_1;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _sh_2:
-        ship = sh_2;
+        cellData = sh_2;
         _width = SIZE * 2;
         _height = SIZE;
         break;
 
     case _sh_3:
-        ship = sh_3;
+        cellData = sh_3;
         _width = SIZE * 3;
         _height = SIZE;
         break;
 
     case _sh_4:
-        ship  = sh_4;
+        cellData = sh_4;
         _width = SIZE * 4;
         _height = SIZE;
         break;
 
     case _dot:
-        ship = dot;
+        cellData = dot;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _hit:
-        ship = hit;
+        cellData = hit;
         _width = SIZE;
         _height = SIZE;
         break;
 
     case _kill:
-        ship = kill;
+        cellData = kill;
         _width = SIZE;
         _height = SIZE;
         break;
@@ -147,3 +147,9 @@ void CCell::changeType(int typeShip)
     update();
 }
 
+void CCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->drawPixmap(0, 0, *cellData, 0, 0, _width, _height);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+}

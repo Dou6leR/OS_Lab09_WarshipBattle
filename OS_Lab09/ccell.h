@@ -38,7 +38,7 @@ public:
     int _height;
     int _typeShip;
     bool isVertical=false;
-    QPixmap* ship;
+    QPixmap* cellData;
 
 
     //All static types of Pixmap(items)
@@ -64,6 +64,9 @@ protected:
 private:
     //Return coordinates
     QRectF boundingRect() const;
+
+    //Paint the cell with (QPixmap *celldata)
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 
 #endif // CCELL_H
