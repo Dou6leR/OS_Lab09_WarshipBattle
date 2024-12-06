@@ -10,6 +10,8 @@ QPixmap* CCell::sh_1;
 QPixmap* CCell::sh_2;
 QPixmap* CCell::sh_3;
 QPixmap* CCell::sh_4;
+bool* CCell::ShipTable = new bool[100]{0};
+
 
 CCell::CCell(int typeShip, bool IsMovable, QObject *parent) : QObject(parent), QGraphicsItem()
 {
@@ -170,6 +172,7 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
     {
         // value is the new position.
         QPointF newPos = value.toPointF();
+      
         if(newPos.x() > 750)
         {
             newPos.setX(750);
@@ -192,7 +195,8 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
         }
         int snappedX = (newPos.x() - (14 * SIZE)) / SIZE;
         int snappedY = (newPos.y() - (3 * SIZE)) / SIZE;
-        // Check if ship is fully in the grd
+
+        // Check if ship is fully in the grid
         if(isVertical)
         {
             if(snappedY - _width / SIZE + 1 > 0)
@@ -206,15 +210,100 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
                     return newPos;
         }
 
+      
         // Snap to the nearest grid point
         newPos.setX(14 * SIZE + snappedX * SIZE);
         newPos.setY(3 * SIZE + snappedY * SIZE);
 
+
         // Ensure the item stays within the bounds of the grid (10x10)
-        if (snappedX >= 0 && snappedX < 10 && snappedY >= 0 && snappedY < 10) {
+        if (snappedX >= 0 && snappedX < 10 && snappedY >= 0 && snappedY < 10)
+        {
+            if(isConflicted(snappedX, snappedY))
+                return newPos;
+            for(int i = 0; i < _width / SIZE; i++)
+            {
+                ShipTable[snappedX + snappedY * 10 + i * (isVertical ? 10 : 1)] = true;
+            }
+            isConToTable = true;
+            // Snap to the nearest grid point
+            newPos.setX(15 * SIZE + snappedX * SIZE);
+            newPos.setY(3 * SIZE + snappedY * SIZE);
             return newPos;
         }
     }
 
     return QGraphicsItem::itemChange(change, value); // Call the base class method for other changes
+}
+
+bool CCell::isConflicted(int x, int y)
+{
+    int size = _width / SIZE;
+    if(isVertical)
+    {
+        if(x != 0)
+        {
+            for(int i = 0; i < size; i++)
+                if(ShipTable[x + (y + i) * 10 - 1]) return true;
+
+            if(y != 0)
+                if(ShipTable[x + y * 10 - 11]) return true;
+
+            if(y != 9)
+                if(ShipTable[x + y * 10 + 10 * size - 1]) return true;
+        }
+        if(x != 9)
+        {
+            for(int i = 0; i < size; i++)
+                if(ShipTable[x + (y + i) * 10 + 1]) return true;
+
+            if(y != 0)
+                if(ShipTable[x + y * 10 - 9]) return true;
+
+            if(y != 9)
+                if(ShipTable[x + y * 10 + 10 * size + 1]) return true;
+        }
+        if(y != 0)
+            if(ShipTable[x + y * 10 - 10]) return true;
+
+        if(y != 9)
+            if(ShipTable[x + y * 10 + 10 * size]) return true;
+
+        for(int i = 0; i < size; i++)
+            if(ShipTable[x + (y + i) * 10]) return true;
+    }
+    else
+    {
+        if(y != 0)
+        {
+            for(int i = 0; i < size; i++)
+                if(ShipTable[x + i + y * 10 - 10]) return true;
+
+            if(x != 0)
+                if(ShipTable[x + y * 10 - 11]) return true;
+
+            if(x != 9)
+                if(ShipTable[x + y * 10 - 10 + SIZE]) return true;
+        }
+        if(y != 9)
+        {
+            for(int i = 0; i < size; i++)
+                if(ShipTable[x + i + y * 10 + 10]) return true;
+
+            if(x != 0)
+                if(ShipTable[x + y * 10 + 9]) return true;
+
+            if(x != 9)
+                if(ShipTable[x + y * 10 + 10 + SIZE]) return true;
+        }
+        if(x != 0)
+            if(ShipTable[x + y * 10 - 1]) return true;
+
+        if(x != 9)
+            if(ShipTable[x + y * 10 + SIZE]) return true;
+
+        for(int i = 0; i < size; i++)
+            if(ShipTable[x + i + y * 10]) return true;
+    }
+    return false;
 }
