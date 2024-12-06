@@ -60,6 +60,8 @@ public:
 
     //Table to check ship conficts static to make shared between other ships
     static bool* ShipTable;
+    //Position of current ship
+    int* PositionOfShip = nullptr;
 
 protected:
     //Rotate the ship

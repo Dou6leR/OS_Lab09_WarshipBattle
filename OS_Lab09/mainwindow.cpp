@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // fix for QGraphicScene \/
     QRectF view_rect = scene->itemsBoundingRect();
-    view_rect.adjust(-20, -20, -20, -20);
+    view_rect.adjust(0, 0, 0, 0);
     scene->setSceneRect(view_rect);
     // fix end /\
 

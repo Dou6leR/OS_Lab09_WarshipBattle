@@ -20,6 +20,7 @@ CCell::CCell(int typeShip, bool IsMovable, QObject *parent) : QObject(parent), Q
     {
         setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable); //Make ships movable
         setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges); // Update position to make connect to the table
+        isVertical = false;
     }
     switch (_typeShip)
     {
@@ -170,6 +171,22 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange && scene())
     {
+        if(isConToTable)
+        {
+            for(int y = 0; y < 10; y++)
+            {
+                QString data = " ";
+                for(int x = 0; x < 10; x++)
+                {
+                    data += QString::number(ShipTable[x + y * 10]);
+
+                }
+                qDebug() << data;
+            }
+            isConToTable = false;
+            for(int i = 0; i < _width / SIZE; i++)
+                ShipTable[PositionOfShip[i]] = false;
+        }
         // value is the new position.
         QPointF newPos = value.toPointF();
       
@@ -183,9 +200,9 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
             newPos.setX(0);
             return newPos;
         }
-        if(newPos.y() > 370)
+        if(newPos.y() > 400)
         {
-            newPos.setY(370);
+            newPos.setY(400);
             return newPos;
         }
         if(newPos.y() < 10)
@@ -199,21 +216,14 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
         // Check if ship is fully in the grid
         if(isVertical)
         {
-            if(snappedY - _width / SIZE + 1 > 0)
-                if(snappedY + _width / SIZE > 10)
-                    return newPos;
+            if(snappedY + _width / SIZE > 10)
+                return newPos;
         }
         else
         {
-            if(snappedX - _width / SIZE + 1 > 0)
-                if(snappedX + _width / SIZE > 10)
-                    return newPos;
+            if(snappedX + _width / SIZE > 10)
+                return newPos;
         }
-
-      
-        // Snap to the nearest grid point
-        newPos.setX(14 * SIZE + snappedX * SIZE);
-        newPos.setY(3 * SIZE + snappedY * SIZE);
 
 
         // Ensure the item stays within the bounds of the grid (10x10)
@@ -221,13 +231,16 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
         {
             if(isConflicted(snappedX, snappedY))
                 return newPos;
+            PositionOfShip = new int[_width / SIZE];
+
             for(int i = 0; i < _width / SIZE; i++)
             {
-                ShipTable[snappedX + snappedY * 10 + i * (isVertical ? 10 : 1)] = true;
+                PositionOfShip[i] = snappedX + snappedY * 10 + i * (isVertical ? 10 : 1);
+                ShipTable[PositionOfShip[i]] = true;
             }
             isConToTable = true;
-            // Snap to the nearest grid point
-            newPos.setX(15 * SIZE + snappedX * SIZE);
+            //Snap to the nearest grid point
+            newPos.setX(14 * SIZE + snappedX * SIZE);
             newPos.setY(3 * SIZE + snappedY * SIZE);
             return newPos;
         }
@@ -239,6 +252,7 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
 bool CCell::isConflicted(int x, int y)
 {
     int size = _width / SIZE;
+    qDebug() << _width;
     if(isVertical)
     {
         if(x != 0)
@@ -274,8 +288,10 @@ bool CCell::isConflicted(int x, int y)
     }
     else
     {
+        qDebug() << "horizontal";
         if(y != 0)
         {
+            qDebug() << "horizontal y!=0";
             for(int i = 0; i < size; i++)
                 if(ShipTable[x + i + y * 10 - 10]) return true;
 
@@ -283,24 +299,33 @@ bool CCell::isConflicted(int x, int y)
                 if(ShipTable[x + y * 10 - 11]) return true;
 
             if(x != 9)
-                if(ShipTable[x + y * 10 - 10 + SIZE]) return true;
+                if(ShipTable[x + y * 10 - 10 + size]) return true;
         }
         if(y != 9)
         {
+            qDebug() << "horizontaly!=9";
             for(int i = 0; i < size; i++)
-                if(ShipTable[x + i + y * 10 + 10]) return true;
+                if(ShipTable[x + i + y * 10 + 10]){
+                    qDebug() << "for x + i + y * 10 + 10";
+                    return true;
+                }
 
             if(x != 0)
-                if(ShipTable[x + y * 10 + 9]) return true;
-
+                if(ShipTable[x + y * 10 + 9]){
+                    qDebug() << "x != 0";
+                    return true;
+                }
             if(x != 9)
-                if(ShipTable[x + y * 10 + 10 + SIZE]) return true;
+                if(ShipTable[x + y * 10 + 10 + size]){
+                    qDebug() << "x != 9";
+                    return true;
+                }
         }
         if(x != 0)
             if(ShipTable[x + y * 10 - 1]) return true;
 
         if(x != 9)
-            if(ShipTable[x + y * 10 + SIZE]) return true;
+            if(ShipTable[x + y * 10 + size]) return true;
 
         for(int i = 0; i < size; i++)
             if(ShipTable[x + i + y * 10]) return true;
