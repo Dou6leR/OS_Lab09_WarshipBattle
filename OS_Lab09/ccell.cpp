@@ -170,9 +170,9 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
     {
         // value is the new position.
         QPointF newPos = value.toPointF();
-        if(newPos.x() > 800)
+        if(newPos.x() > 750)
         {
-            newPos.setX(800);
+            newPos.setX(750);
             return newPos;
         }
         if(newPos.x() < 0)
@@ -185,12 +185,12 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
             newPos.setY(370);
             return newPos;
         }
-        if(newPos.y() < 0)
+        if(newPos.y() < 10)
         {
-            newPos.setY(0);
+            newPos.setY(10);
             return newPos;
         }
-        int snappedX = (newPos.x() - (15 * SIZE)) / SIZE;
+        int snappedX = (newPos.x() - (14 * SIZE)) / SIZE;
         int snappedY = (newPos.y() - (3 * SIZE)) / SIZE;
         // Check if ship is fully in the grd
         if(isVertical)
@@ -207,7 +207,7 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
         }
 
         // Snap to the nearest grid point
-        newPos.setX(15 * SIZE + snappedX * SIZE);
+        newPos.setX(14 * SIZE + snappedX * SIZE);
         newPos.setY(3 * SIZE + snappedY * SIZE);
 
         // Ensure the item stays within the bounds of the grid (10x10)
