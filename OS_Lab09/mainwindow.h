@@ -7,6 +7,10 @@
 #include "client.h"
 #include <QMainWindow>
 #include <QPushButton>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTimer>
 
 //UI managing
 #define W_WIDTH 800

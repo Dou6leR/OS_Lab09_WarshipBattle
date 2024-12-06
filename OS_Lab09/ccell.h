@@ -26,10 +26,10 @@ class CCell : public QObject, public QGraphicsItem
 
 public:
     //Const size of every cell
-    static const int SIZE = 28;
+    static const int SIZE = 30;
 
     //Constructor
-    explicit CCell(int typeShip, QObject *parent = 0);
+    explicit CCell(int typeShip, bool IsMovable, QObject *parent = 0);
     ~CCell();
 
 
@@ -60,6 +60,7 @@ public:
 protected:
     //Rotate the ship
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
     //Return coordinates
