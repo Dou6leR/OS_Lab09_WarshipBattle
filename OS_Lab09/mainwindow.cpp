@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
         for(int y = 0; y < 10; y++)
         {
             shipField2[x + y * 10] = new CCell(_cell, 0);
-            shipField2[x + y * 10]->setPos(15 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
+            shipField2[x + y * 10]->setPos(14 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField2[x + y * 10]);
         }
     }
@@ -74,6 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
         scene->addItem(ships[i]);
     }
 
+    // fix for QGraphicScene \/
+    QRectF view_rect = scene->itemsBoundingRect();
+    view_rect.adjust(-20, -20, -20, -20);
+    scene->setSceneRect(view_rect);
+    // fix end /\
 
 }
 
