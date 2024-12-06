@@ -173,16 +173,6 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
     {
         if(isConToTable)
         {
-            for(int y = 0; y < 10; y++)
-            {
-                QString data = " ";
-                for(int x = 0; x < 10; x++)
-                {
-                    data += QString::number(ShipTable[x + y * 10]);
-
-                }
-                qDebug() << data;
-            }
             isConToTable = false;
             for(int i = 0; i < _width / SIZE; i++)
                 ShipTable[PositionOfShip[i]] = false;
@@ -252,7 +242,6 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
 bool CCell::isConflicted(int x, int y)
 {
     int size = _width / SIZE;
-    qDebug() << _width;
     if(isVertical)
     {
         if(x != 0)
