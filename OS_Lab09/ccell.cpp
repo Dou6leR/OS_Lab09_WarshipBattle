@@ -64,8 +64,14 @@ QRectF CCell::boundingRect() const
 
 void CCell::initPixmap()
 {
-    //TO DO:
-    //Intizlize static types "dot = new QPixmap("/path/.png");"
+    dot = new QPixmap(":/images/dot.png");
+    cell = new QPixmap(":/images/cell.png");
+    kill = new QPixmap(":/images/kill.png");
+    hit = new QPixmap(":/images/hit.png");
+    sh_1 = new QPixmap(":/images/sh_1.png");
+    sh_2 = new QPixmap(":/images/sh_2.png");
+    sh_3 = new QPixmap(":/images/sh_3.png");
+    sh_4 = new QPixmap(":/images/sh_4.png");
 
 }
 
