@@ -7,6 +7,7 @@
 #include "client.h"
 #include <QMainWindow>
 #include <QPushButton>
+#include <QThread>
 
 //UI managing
 #define W_WIDTH 800
@@ -39,6 +40,7 @@ public:
     void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void test_func();
     void switch_page(int page);
 
 private slots:
@@ -62,5 +64,24 @@ private:
     QVector<CCell*> shipField2;
     QVector<CCell*> ships;
 
+};
+
+class Worker : public QObject {
+    Q_OBJECT
+public:
+    Worker(MainWindow* mw) {m_mw = mw;};
+    ~Worker() {m_mw = nullptr;};
+public slots:
+    void process()
+    {
+        m_mw->test_func();
+        emit finished();
+    };
+signals:
+    void finished();
+    void error(QString err);
+private:
+    MainWindow* m_mw;
+         // add your variables here
 };
 #endif // MAINWINDOW_H

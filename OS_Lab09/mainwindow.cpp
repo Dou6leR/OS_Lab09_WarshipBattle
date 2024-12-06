@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     ui->setupUi(this);
-
+    // // func_connections
+    // connect(this->ui->player_but, &QPushButton::clicked, this, &MainWindow::test_func);
 
     //One time init
     CCell::initPixmap();
@@ -155,24 +156,40 @@ void MainWindow::on_server_but_clicked()
 void MainWindow::on_player_but_clicked()
 {
     switch_page(SHIP_PLACE_PAGE);
+    QThread* thread = new QThread();
+    Worker* worker = new Worker(this);
+    worker->moveToThread(thread);
+    connect( thread, &QThread::started, worker, &Worker::process);
+    connect( worker, &Worker::finished, thread, &QThread::quit);
+    connect( worker, &Worker::finished, worker, &Worker::deleteLater);
+    connect( thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
 
-    Client* new_client = new Client("/tmp/socket");
-
-    new_client->create_socket();
-
-    new_client->connect_to_server();
-
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [new_client]() {
-        QString data = new_client->receive_data();
-        qDebug() << "Message from server: " << data;
-        sleep(5);
-        new_client->send_data("Message from client");
-    });
-
-    timer->start(5000);
 }
 
+void MainWindow::test_func()
+{
+    try
+    {
+        Client* new_client = new Client("/tmp/socket");
+
+        new_client->create_socket();
+
+        new_client->connect_to_server();
+
+        while (true)
+        {
+            QString data = new_client->receive_data();
+            qDebug() << "Message from server: " << data;
+            sleep(5);
+            new_client->send_data("Message from client");
+        }
+    }
+    catch(std::exception exc)
+    {
+        qDebug() << exc.what();
+    }
+}
 
 void MainWindow::on_ready_but_clicked()
 {
