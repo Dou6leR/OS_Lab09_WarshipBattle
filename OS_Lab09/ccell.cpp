@@ -231,7 +231,7 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
         {
             if(isConflicted(snappedX, snappedY))
                 return newPos;
-            PositionOfShip = new int[_width / SIZE];
+            PositionOfShip = new int[(_width / SIZE)];
 
             for(int i = 0; i < _width / SIZE; i++)
             {
@@ -263,7 +263,7 @@ bool CCell::isConflicted(int x, int y)
             if(y != 0)
                 if(ShipTable[x + y * 10 - 11]) return true;
 
-            if(y != 9)
+            if(y + size - 1 != 9)
                 if(ShipTable[x + y * 10 + 10 * size - 1]) return true;
         }
         if(x != 9)
@@ -274,13 +274,13 @@ bool CCell::isConflicted(int x, int y)
             if(y != 0)
                 if(ShipTable[x + y * 10 - 9]) return true;
 
-            if(y != 9)
+            if(y + size - 1 != 9)
                 if(ShipTable[x + y * 10 + 10 * size + 1]) return true;
         }
         if(y != 0)
             if(ShipTable[x + y * 10 - 10]) return true;
 
-        if(y != 9)
+        if(y + size - 1 != 9)
             if(ShipTable[x + y * 10 + 10 * size]) return true;
 
         for(int i = 0; i < size; i++)
@@ -288,10 +288,8 @@ bool CCell::isConflicted(int x, int y)
     }
     else
     {
-        qDebug() << "horizontal";
         if(y != 0)
         {
-            qDebug() << "horizontal y!=0";
             for(int i = 0; i < size; i++)
                 if(ShipTable[x + i + y * 10 - 10]) return true;
 
@@ -303,23 +301,14 @@ bool CCell::isConflicted(int x, int y)
         }
         if(y != 9)
         {
-            qDebug() << "horizontaly!=9";
             for(int i = 0; i < size; i++)
-                if(ShipTable[x + i + y * 10 + 10]){
-                    qDebug() << "for x + i + y * 10 + 10";
-                    return true;
-                }
+                if(ShipTable[x + i + y * 10 + 10]) return true;
 
             if(x != 0)
-                if(ShipTable[x + y * 10 + 9]){
-                    qDebug() << "x != 0";
-                    return true;
-                }
+                if(ShipTable[x + y * 10 + 9]) return true;
+
             if(x != 9)
-                if(ShipTable[x + y * 10 + 10 + size]){
-                    qDebug() << "x != 9";
-                    return true;
-                }
+                if(ShipTable[x + y * 10 + 10 + size]) return true;
         }
         if(x != 0)
             if(ShipTable[x + y * 10 - 1]) return true;
