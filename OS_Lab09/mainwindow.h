@@ -40,10 +40,11 @@ public:
     void switch_page(int page);
 
 private slots:
+    void on_server_but_clicked();
 
-    void on_player_btn_clicked();
+    void on_player_but_clicked();
 
-    void on_server_btn_clicked();
+    void on_ready_but_clicked();
 
 private:
     Ui::MainWindow *ui;
