@@ -30,17 +30,24 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>200</y>
+        <y>290</y>
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>Server</string>
@@ -50,13 +57,23 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>290</y>
+        <y>200</y>
         <width>200</width>
         <height>60</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Player</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="game_name">
@@ -67,6 +84,13 @@
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>SeaBattle</string>
@@ -85,6 +109,13 @@
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>Ready</string>
@@ -146,7 +177,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
