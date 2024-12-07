@@ -64,19 +64,8 @@ void MainWindow::on_player_but_clicked()
 
 void MainWindow::on_ready_but_clicked()
 {
-    for(int i = 0; i < SHIPSNUM;  i++)
-    {
-        if(!(ships[i]->isConToTable))
-        {
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Attention!");
-            msgBox.setText("Place all ships first and check if all ships in connected to the grid");
-            msgBox.setStandardButtons(QMessageBox::Ok);
-            msgBox.setIcon(QMessageBox::Information);
-            msgBox.exec();
-            return;
-        }
-    }
+    if(ships->checkAllConection())
+        return;
     //To Do:
     //Send all ships to the server
     //PositionOfShip array of all indexes ships[i]->PositionOfShip
@@ -85,78 +74,21 @@ void MainWindow::on_ready_but_clicked()
 
 
     switch_page(GAME_PAGE);
-    for(int i = 0; i < 100; i++)
-    {
-        shipField1[i]->show();
-    }
-    for(int i = 0; i < SHIPSNUM; i++)
-    {
-        ships[i]->deleteMovableOption();
-        ships[i]->moveBy(-13 * CCell::SIZE, 0);
-    }
-    for (int i=0; i<shipField2.size(); i++)
-        shipField2[i]->setCursor(Qt::CrossCursor);
+    grid1->show();
+    ships->SwitchGridForShip();
+
+
     ui->game_View->setScene(scene);
 }
 
 void MainWindow::initShipsAndGrids()
 {
     scene = new QGraphicsScene;
-    //Add first shipField
-    shipField1.resize(100);
-    for(int x = 0; x < 10; x++)
-    {
-        for(int y = 0; y < 10; y++)
-        {
-            shipField1[x + y * 10] = new CCell(_cell, 0);
-            shipField1[x + y * 10]->setPos(1 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
-            scene->addItem(shipField1[x + y * 10]);
-            shipField1[x + y * 10]->hide();
-        }
-    }
-    //Add second shipField
-    shipField2.resize(100);
-    for(int x = 0; x < 10; x++)
-    {
-        for(int y = 0; y < 10; y++)
-        {
-            shipField2[x + y * 10] = new CCell(_cell, 0);
-            shipField2[x + y * 10]->setPos(14 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
-            scene->addItem(shipField2[x + y * 10]);
-        }
-    }
 
-    //Add all ships to scene
-    ships.resize(10);
-    int i = 0, j = 1;
-
-    for(int k = 1; k <= j; k++, i++)
-    {
-        ships[i] = new CCell(_sh_4, 1);
-        ships[i]->setPos(CCell::SIZE * (_sh_4 * (k - 1) + k), CCell::SIZE * (10 - j * 2));
-        scene->addItem(ships[i]);
-    }
-    j++;
-    for(int k = 1; k <= j; k++, i++)
-    {
-        ships[i] = new CCell(_sh_3, 1);
-        ships[i]->setPos(CCell::SIZE * (_sh_3 * (k - 1) + k), CCell::SIZE * (10 - j * 2));
-        scene->addItem(ships[i]);
-    }
-    j++;
-    for(int k = 1; k <= j; k++, i++)
-    {
-        ships[i] = new CCell(_sh_2, 1);
-        ships[i]->setPos(CCell::SIZE * (_sh_2 * (k - 1) + k), CCell::SIZE * (10 - j * 2));
-        scene->addItem(ships[i]);
-    }
-    j++;
-    for(int k = 1; k <= j; k++, i++)
-    {
-        ships[i] = new CCell(_sh_1, 1);
-        ships[i]->setPos(CCell::SIZE * (_sh_1 * (k - 1) + k), CCell::SIZE * (10 - j * 2));
-        scene->addItem(ships[i]);
-    }
+    grid1 = new CGrid(scene, CCell::SIZE, 3 * CCell::SIZE);
+    grid1->hide();
+    grid2 = new CGrid(scene, 14 * CCell::SIZE, 3 * CCell::SIZE);
+    ships = new CShip(scene, CCell::SIZE, CCell::SIZE);
 
     // fix for QGraphicScene
     QRectF view_rect = scene->itemsBoundingRect();

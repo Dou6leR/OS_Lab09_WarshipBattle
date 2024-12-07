@@ -10,14 +10,18 @@ CONFIG += c++17
 
 SOURCES += \
     ccell.cpp \
+    cgrid.cpp \
     client.cpp \
+    cship.cpp \
     main.cpp \
     mainwindow.cpp \
     server.cpp
 
 HEADERS += \
     ccell.h \
+    cgrid.h \
     client.h \
+    cship.h \
     exception.h \
     mainwindow.h \
     server.h
