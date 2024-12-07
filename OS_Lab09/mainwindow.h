@@ -7,6 +7,11 @@
 #include "client.h"
 #include <QMainWindow>
 #include <QPushButton>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTimer>
+#include <QMessageBox>
 
 //UI managing
 #define W_WIDTH 800
@@ -61,6 +66,9 @@ private:
     QVector<CCell*> shipField1;
     QVector<CCell*> shipField2;
     QVector<CCell*> ships;
+
+    //Add all ships and 2 grids
+    void initShipsAndGrids();
 
 };
 #endif // MAINWINDOW_H

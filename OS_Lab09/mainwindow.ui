@@ -37,10 +37,17 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>200</y>
+        <y>290</y>
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>Server</string>
@@ -50,13 +57,23 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>290</y>
+        <y>200</y>
         <width>200</width>
         <height>60</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Player</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="game_name">
@@ -67,6 +84,13 @@
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>SeaBattle</string>
@@ -86,6 +110,13 @@
         <height>60</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Ready</string>
       </property>
@@ -98,6 +129,24 @@
         <width>740</width>
         <height>400</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
       </property>
      </widget>
     </widget>
@@ -119,7 +168,36 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="game_page"/>
+    <widget class="QWidget" name="game_page">
+     <widget class="QGraphicsView" name="game_View">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>740</width>
+        <height>400</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
