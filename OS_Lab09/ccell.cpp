@@ -285,7 +285,7 @@ bool CCell::isConflicted(int x, int y)
             if(x != 0)
                 if(ShipTable[x + y * 10 - 11]) return true;
 
-            if(x != 9)
+            if(x + size - 1 != 9)
                 if(ShipTable[x + y * 10 - 10 + size]) return true;
         }
         if(y != 9)
@@ -296,13 +296,13 @@ bool CCell::isConflicted(int x, int y)
             if(x != 0)
                 if(ShipTable[x + y * 10 + 9]) return true;
 
-            if(x != 9)
+            if(x + size - 1 != 9)
                 if(ShipTable[x + y * 10 + 10 + size]) return true;
         }
         if(x != 0)
             if(ShipTable[x + y * 10 - 1]) return true;
 
-        if(x != 9)
+        if(x + size - 1 != 9)
             if(ShipTable[x + y * 10 + size]) return true;
 
         for(int i = 0; i < size; i++)

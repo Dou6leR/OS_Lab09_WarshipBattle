@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QGraphicsItem>
 #include <QPainter>
+#define SHIPSNUM 10
 
 //Enumerator of cell types
 enum CellTypes

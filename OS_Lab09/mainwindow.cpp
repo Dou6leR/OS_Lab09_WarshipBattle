@@ -183,6 +183,9 @@ void MainWindow::on_player_but_clicked()
 
 void MainWindow::on_ready_but_clicked()
 {
+    for(int i = 0; i < SHIPSNUM;  i++)
+    {
 
+    }
 }
 
