@@ -48,6 +48,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    Client* client;
+    Server* server;
+
     //Current scene
     QGraphicsScene  *scene;
 

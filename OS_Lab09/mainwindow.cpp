@@ -50,7 +50,7 @@ void MainWindow::on_server_but_clicked()
 {
     switch_page(SERVER_PAGE);
   
-    new Server("/tmp/socket", ui->server_log);
+    server = new Server("/tmp/socket", ui->server_log);
 }
 
 void MainWindow::on_player_but_clicked()
@@ -59,24 +59,20 @@ void MainWindow::on_player_but_clicked()
     ui->placing_View->setScene(scene);
     switch_page(SHIP_PLACE_PAGE);
 
-    new Client("/tmp/socket");
+    client = new Client("/tmp/socket");
 }
 
 void MainWindow::on_ready_but_clicked()
 {
     if(ships->checkAllConection())
         return;
-    //To Do:
-    //Send all ships to the server
-    //PositionOfShip array of all indexes ships[i]->PositionOfShip
 
-
+    client->send_data(ships->getAllShipPositions());
 
 
     switch_page(GAME_PAGE);
     grid1->show();
     ships->SwitchGridForShip();
-
 
     ui->game_View->setScene(scene);
 }
