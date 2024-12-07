@@ -30,18 +30,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void connect_client(Client* client);
-    void connect_server();
-    void send_to_server(Client* client);
-    void accept_client();
-    void receive_data(int id);
-    void send_client1();
-    void send_client2();
-    void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void client_func();
-    void server_func();
     void switch_page(int page);
 
 private slots:
@@ -54,9 +44,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    Server* server;
-    QVector<int> client_sockets;
-
     //Current scene
     QGraphicsScene  *scene;
 
@@ -67,27 +54,4 @@ private:
 
 };
 
-class Worker : public QObject {
-    Q_OBJECT
-public:
-    Worker(MainWindow* mw) {m_mw = mw;};
-    ~Worker() {m_mw = nullptr;};
-public slots:
-    void process_client()
-    {
-        m_mw->client_func();
-        emit finished();
-    };
-    void process_server()
-    {
-        m_mw->server_func();
-        emit finished();
-    };
-signals:
-    void finished();
-    void error(QString err);
-private:
-    MainWindow* m_mw;
-        // add your variables here
-};
 #endif // MAINWINDOW_H

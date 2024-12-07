@@ -104,105 +104,18 @@ void MainWindow::switch_page(int page)
     }
 }
 
-void MainWindow::send_to_server(Client* client){
-    client->send_data("Some text to server");
-}
-
-void MainWindow::receive_data(int id){
-    QString data;
-    data = server->receive_data(client_sockets[id]);
-
-    qDebug() << "Server receives data from client "<< id <<". Data: " << data;
-}
-
-void MainWindow::send_client1(){
-    server->send_data(client_sockets[0], "Message to client 1");
-}
-
-void MainWindow::send_client2(){
-    server->send_data(client_sockets[1], "Message to client 2");
-}
-
 void MainWindow::on_server_but_clicked()
 {
     switch_page(SERVER_PAGE);
-    QThread* thread = new QThread();
-    Worker* worker = new Worker(this);
-    worker->moveToThread(thread);
-    connect( thread, &QThread::started, worker, &Worker::process_server);
-    connect( worker, &Worker::finished, thread, &QThread::quit);
-    connect( worker, &Worker::finished, worker, &Worker::deleteLater);
-    connect( thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
 
+    new Server("/tmp/socket", ui->server_log);
 }
 
 void MainWindow::on_player_but_clicked()
 {
     switch_page(SHIP_PLACE_PAGE);
-    QThread* thread = new QThread();
-    Worker* worker = new Worker(this);
-    worker->moveToThread(thread);
-    connect( thread, &QThread::started, worker, &Worker::process_client);
-    connect( worker, &Worker::finished, thread, &QThread::quit);
-    connect( worker, &Worker::finished, worker, &Worker::deleteLater);
-    connect( thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
 
-}
-
-void MainWindow::server_func(){
-    try{
-        server = new Server("/tmp/socket");
-
-        server->create_socket();
-        server->bind_socket();
-        server->listen_for_clients();
-
-        client_sockets.append(server->accept_client());
-
-        client_sockets.append(server->accept_client());
-
-        while(true){
-            QString data = "Your turn";
-
-            server->send_data(client_sockets[0], data);
-            data = server->receive_data(client_sockets[0]);
-            qDebug() << "Message from client 1: " << data;
-
-            server->send_data(client_sockets[1], data);
-            data = server->receive_data(client_sockets[1]);
-            qDebug() << "Message from client 2: " << data;
-        }
-    }
-    catch(std::exception exc)
-    {
-        qDebug() << exc.what();
-    }
-}
-
-void MainWindow::client_func()
-{
-    try
-    {
-        Client* new_client = new Client("/tmp/socket");
-
-        new_client->create_socket();
-
-        new_client->connect_to_server();
-
-        while (true)
-        {
-            QString data = new_client->receive_data();
-            qDebug() << "Message from server: " << data;
-            sleep(5);
-            new_client->send_data("Message from client");
-        }
-    }
-    catch(std::exception exc)
-    {
-        qDebug() << exc.what();
-    }
+    new Client("/tmp/socket");
 }
 
 void MainWindow::on_ready_but_clicked()
