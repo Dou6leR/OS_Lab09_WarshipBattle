@@ -33,6 +33,8 @@ public:
     explicit CCell(int typeShip, bool IsMovable, QObject *parent = 0);
     ~CCell();
 
+    //Delete the movable option for an onbject
+    void deleteMovableOption();
 
     //Fiels
     int _width;

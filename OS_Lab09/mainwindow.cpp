@@ -12,7 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->placing_View->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui->placing_View->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
+    ui->game_View->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ui->game_View->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    // ui-game_View->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    // ui->game_View->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     //One time init
     CCell::initPixmap();
 
@@ -122,8 +125,35 @@ void MainWindow::on_ready_but_clicked()
 {
     for(int i = 0; i < SHIPSNUM;  i++)
     {
-
+        if(!(ships[i]->isConToTable))
+        {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Attention!");
+            msgBox.setText("Place all ships first and check if all ships in connected to the grid");
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.exec();
+            return;
+        }
     }
+    //To Do:
+    //Send all ships to the server
+    //PositionOfShip array of all indexes ships[i]->PositionOfShip
+
+
+
+
+    switch_page(GAME_PAGE);
+    for(int i = 0; i < 100; i++)
+    {
+        shipField1[i]->show();
+    }
+    for(int i = 0; i < SHIPSNUM; i++)
+    {
+        ships[i]->deleteMovableOption();
+        ships[i]->moveBy(-13 * CCell::SIZE, 0);
+    }
+    ui->game_View->setScene(scene);
 }
 
 void MainWindow::initShipsAndGrids()
@@ -136,7 +166,7 @@ void MainWindow::initShipsAndGrids()
         for(int y = 0; y < 10; y++)
         {
             shipField1[x + y * 10] = new CCell(_cell, 0);
-            shipField1[x + y * 10]->setPos(2 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
+            shipField1[x + y * 10]->setPos(1 * CCell::SIZE + x * CCell::SIZE, 3 * CCell::SIZE + y * CCell::SIZE);
             scene->addItem(shipField1[x + y * 10]);
             shipField1[x + y * 10]->hide();
         }

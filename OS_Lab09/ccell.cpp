@@ -61,6 +61,12 @@ CCell::CCell(int typeShip, bool IsMovable, QObject *parent) : QObject(parent), Q
 
 CCell::~CCell() {}
 
+void CCell::deleteMovableOption()
+{
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemIsMovable, false);
+    setFlag(QGraphicsItem::GraphicsItemFlag::ItemSendsScenePositionChanges, false);
+}
+
 QRectF CCell::boundingRect() const
 {
     return QRectF(0, 0, _width, _height);
@@ -81,21 +87,24 @@ void CCell::initPixmap()
 
 void CCell::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (2 <= _typeShip && _typeShip <= 4) // Rotate only ship (2, 3, 4)
+    if(flags() & QGraphicsItem::ItemIsMovable)
     {
-        if (!isVertical)
+        if (2 <= _typeShip && _typeShip <= 4) // Rotate only ship (2, 3, 4)
         {
-            setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
-            setRotation(90);
-            isVertical = true;
+            if (!isVertical)
+            {
+                setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
+                setRotation(90);
+                isVertical = true;
+            }
+            else
+            {
+                setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
+                setRotation(0);
+                isVertical = false;
+            }
+            Q_UNUSED(event);
         }
-        else
-        {
-            setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
-            setRotation(0);
-            isVertical = false;
-        }
-        Q_UNUSED(event);
     }
 }
 

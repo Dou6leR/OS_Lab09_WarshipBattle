@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QMessageBox>
 
 //UI managing
 #define W_WIDTH 800
