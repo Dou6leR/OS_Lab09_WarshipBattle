@@ -155,6 +155,8 @@ void MainWindow::on_ready_but_clicked()
         ships[i]->deleteMovableOption();
         ships[i]->moveBy(-13 * CCell::SIZE, 0);
     }
+    for (int i=0; i<shipField2.size(); i++)
+        shipField2[i]->setCursor(Qt::CrossCursor);
     ui->game_View->setScene(scene);
 }
 
