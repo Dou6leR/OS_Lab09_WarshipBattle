@@ -1,7 +1,11 @@
 #include "client.h"
 #include <QDebug>
 
-Client::Client(const QString& path) : socket_path(path), client_socket(-1) {}
+ClientController::ClientController(Client *client): m_client(client){}
+
+Client::Client(const QString& path) : socket_path(path), client_socket(-1) {
+    client_init();
+}
 
 Client::~Client() {
     close_connection();
@@ -20,7 +24,7 @@ void Client::create_socket() {
 }
 
 void Client::connect_to_server() {
-    if (connect(client_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
+    if (::connect(client_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
         throw(Exception("Connection to server failed"));
     }
     qDebug() << "Client connects to server";
@@ -49,6 +53,34 @@ void Client::close_connection() {
     }
 }
 
-int Client::get_socket(){
-    return client_socket;
+void Client::client_init(){
+    QThread* thread = new QThread();
+    ClientController* client_ctrl = new ClientController(this);
+    client_ctrl->moveToThread(thread);
+    connect( thread, &QThread::started, client_ctrl, &ClientController::process_client);
+    connect( client_ctrl, &ClientController::finished, thread, &QThread::quit);
+    connect( client_ctrl, &ClientController::finished, client_ctrl, &ClientController::deleteLater);
+    connect( thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
+}
+
+void ClientController::process_client(){
+    try
+    {
+        m_client->create_socket();
+
+        m_client->connect_to_server();
+
+        while (true)
+        {
+            QString data = m_client->receive_data();
+            qDebug() << "Message from server: " << data;
+            sleep(5);
+            m_client->send_data("Message from client");
+        }
+    }
+    catch(std::exception exc)
+    {
+        qDebug() << exc.what();
+    }
 }

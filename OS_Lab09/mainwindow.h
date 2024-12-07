@@ -8,9 +8,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QLabel>
-#include <QTimer>
 #include <QMessageBox>
 
 //UI managing
@@ -34,14 +32,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void connect_client(Client* client);
-    void connect_server();
-    void send_to_server(Client* client);
-    void accept_client();
-    void receive_data(int id);
-    void send_client1();
-    void send_client2();
-    void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void switch_page(int page);
@@ -56,9 +46,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    Server* server;
-    QVector<int> client_sockets;
-    
     //Current scene
     QGraphicsScene  *scene;
 
@@ -71,4 +58,5 @@ private:
     void initShipsAndGrids();
 
 };
+
 #endif // MAINWINDOW_H
