@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     ui->setupUi(this);
+    switch_page(WELCOME_PAGE);
+
     ui->placing_View->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui->placing_View->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     ui->game_View->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
