@@ -66,5 +66,8 @@ private:
     QVector<CCell*> shipField2;
     QVector<CCell*> ships;
 
+    //Add all ships and 2 grids
+    void initShipsAndGrids();
+
 };
 #endif // MAINWINDOW_H
