@@ -2,6 +2,7 @@
 #define CSHIP_H
 #include <QGraphicsScene>
 #include <QMessageBox>
+#include <QString>
 #include "ccell.h"
 class CShip
 {
@@ -12,6 +13,8 @@ public:
     void SwitchGridForShip();
 
     bool checkAllConection();
+
+    QString getAllShipPositions();
 private:
     QGraphicsScene* scene;
     QVector<CCell*> ships;

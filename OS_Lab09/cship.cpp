@@ -64,11 +64,11 @@ bool CShip::checkAllConection()
 
 QString CShip::getAllShipPositions()
 {
-    QString positions = " ";
+    QString positions = "";
     for(int i = 0; i < SHIPSNUM; i++)
     {
         for(int j = 0; j < ships[i]->_width / CCell::SIZE; j++)
-            positions += QString::number(ships[i]->PositionOfShip[j];
-        positions += ", ";
+            positions += QString::number(ships[i]->PositionOfShip[j] + " ";
+        positions += ",";
     }
 }
