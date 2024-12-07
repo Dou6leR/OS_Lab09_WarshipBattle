@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QGraphicsItem>
 #include <QPainter>
+#define SHIPSNUM 10
 
 //Enumerator of cell types
 enum CellTypes
@@ -26,18 +27,21 @@ class CCell : public QObject, public QGraphicsItem
 
 public:
     //Const size of every cell
-    static const int SIZE = 28;
+    static const int SIZE = 30;
 
     //Constructor
-    explicit CCell(int typeShip, QObject *parent = 0);
+    explicit CCell(int typeShip, bool IsMovable, QObject *parent = 0);
     ~CCell();
 
+    //Delete the movable option for an onbject
+    void deleteMovableOption();
 
     //Fiels
     int _width;
     int _height;
     int _typeShip;
     bool isVertical=false;
+    bool isConToTable; // Check if ship connected to table
     QPixmap* cellData;
 
 
@@ -57,13 +61,22 @@ public:
     //Change type of cell
     void changeType(int type);
 
+    //Table to check ship conficts static to make shared between other ships
+    static bool* ShipTable;
+    //Position of current ship
+    int* PositionOfShip = nullptr;
+
 protected:
     //Rotate the ship
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
     //Return coordinates
     QRectF boundingRect() const;
+
+    //Check conflicts with other ships
+    bool isConflicted(int x, int y);
 
     //Paint the cell with (QPixmap *celldata)
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
