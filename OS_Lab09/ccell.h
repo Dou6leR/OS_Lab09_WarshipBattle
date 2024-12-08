@@ -61,6 +61,8 @@ public:
     //Change type of cell
     void changeType(int type);
 
+    void rotateShip();
+
     //Table to check ship conficts static to make shared between other ships
     static bool* ShipTable;
     //Position of current ship

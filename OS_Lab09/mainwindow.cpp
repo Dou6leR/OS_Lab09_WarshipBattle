@@ -42,6 +42,7 @@ void MainWindow::switch_page(int page)
 
     case GAME_PAGE:
         grid1->show();
+        grid2->SetCoolCursor();
         ships->SwitchGridForShip();
         ui->game_View->setScene(scene);
         this->ui->mw_pages->setCurrentWidget(this->ui->game_page);

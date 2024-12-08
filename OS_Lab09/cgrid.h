@@ -1,6 +1,7 @@
 #ifndef CGRID_H
 #define CGRID_H
 #include <QGraphicsScene>
+#include <QCursor>
 #include "ccell.h"
 class CGrid: public QObject
 {
@@ -20,11 +21,21 @@ private:
     bool isServerAnswered = false;
     QGraphicsScene* scene;
     QVector<CCell*> shipField;
+    QVector<CCell*> killOnTop;
+    QVector<CCell*> newShips;
 
 public slots:
-    void recieveClickedCell(int n);
+    void recieveClickedCell(int n); // received from ccell
+
+    void recieveHitMissAttacker(int n, int type); // For attacker to change second grid
+
+    void receiveHitMissDefender(int n, int type); // For defender to change first grid
+
+    void recieveKillAttacker(int size, int *ship); // For attacker to change second grid
+
+    void recieveKillDefender(int size, int *ship); // For defender to change first grid
 signals:
-    void sendCellToServer(int n);
+    void sendCellToServer(int n); // send further to client/server
 };
 
 #endif // CGRID_H

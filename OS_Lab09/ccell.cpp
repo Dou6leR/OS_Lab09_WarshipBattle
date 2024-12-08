@@ -82,6 +82,32 @@ void CCell::initPixmap()
     sh_2 = new QPixmap(":/images/sh_2.png");
     sh_3 = new QPixmap(":/images/sh_3.png");
     sh_4 = new QPixmap(":/images/sh_4.png");
+}
+
+void CCell::rotateShip()
+{
+    if (2 <= _typeShip && _typeShip <= 4) // Rotate only ship (2, 3, 4)
+    {
+        if (!isVertical)
+        {
+            setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
+            setRotation(90);
+            isVertical = true;
+        }
+        else
+        {
+            setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
+            setRotation(0);
+            isVertical = false;
+        }
+        if(isConToTable)
+        {
+            isConToTable = false;
+            for(int i = 0; i < _width / SIZE; i++)
+                ShipTable[PositionOfShip[i]] = false;
+            delete[] PositionOfShip;
+        }
+    }
 
 }
 
@@ -89,30 +115,8 @@ void CCell::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     if(flags() & QGraphicsItem::ItemIsMovable)
     {
-        if (2 <= _typeShip && _typeShip <= 4) // Rotate only ship (2, 3, 4)
-        {
-            if (!isVertical)
-            {
-                setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
-                setRotation(90);
-                isVertical = true;
-            }
-            else
-            {
-                setTransformOriginPoint(SIZE / 2, SIZE / 2); // set point of rotate in the midlle of top left
-                setRotation(0);
-                isVertical = false;
-            }
-            if(isConToTable)
-            {
-                isConToTable = false;
-                for(int i = 0; i < _width / SIZE; i++)
-                    ShipTable[PositionOfShip[i]] = false;
-                delete[] PositionOfShip;
-            }
-            Q_UNUSED(event);
-
-        }
+        rotateShip();
+        Q_UNUSED(event);
     }
 }
 

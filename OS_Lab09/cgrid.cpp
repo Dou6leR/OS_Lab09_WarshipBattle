@@ -32,7 +32,7 @@ void CGrid::SetCoolCursor()
 {
     for (int i = 0; i < 100; i++)
     {
-        //shipField[i]->setCursor(Qt::CrossCursor);
+        shipField[i]->setCursor(QCursor(Qt::CrossCursor));
     }
 }
 void CGrid::startRecievingShoots()
@@ -48,5 +48,31 @@ void CGrid::recieveClickedCell(int n)
         emit sendCellToServer(receivedCell);
         qDebug() << n;
     }
+}
+
+void CGrid::recieveHitMissAttacker(int n, int type)
+{
+    shipField[n]->changeType(type);
+    isServerAnswered = true;
+}
+
+void CGrid::receiveHitMissDefender(int n, int type)
+{
+    if(type == _dot)
+        shipField[n]->changeType(type);
+    else
+    {
+        killOnTop.push_back(new CCell(_kill, 0));
+        killOnTop.last()->setPos(CCell::SIZE * (n % 10), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
+    }
+}
+
+void CGrid::recieveKillAttacker(int size, int *ship)
+{
+
+}
+
+void CGrid::recieveKillDefender(int size, int *ship)
+{
 
 }
