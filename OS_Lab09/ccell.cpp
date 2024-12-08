@@ -108,7 +108,6 @@ void CCell::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
                 isConToTable = false;
                 for(int i = 0; i < _width / SIZE; i++)
                     ShipTable[PositionOfShip[i]] = false;
-                //moveBy(-(PositionOfShip[0] / 10 + 1) * CCell::SIZE, 0);
                 delete[] PositionOfShip;
             }
             Q_UNUSED(event);
