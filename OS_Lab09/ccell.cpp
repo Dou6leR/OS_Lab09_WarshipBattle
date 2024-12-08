@@ -328,3 +328,13 @@ bool CCell::isConflicted(int x, int y)
     }
     return false;
 }
+
+void CCell::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (_typeShip == _cell)
+    {
+        int n = (pos().x() - SIZE * 14) / SIZE + (pos().y() - SIZE * 3) * 10 / SIZE;
+        emit sendShootCoordinate(n);
+    }
+    QGraphicsItem::mousePressEvent(event);
+}

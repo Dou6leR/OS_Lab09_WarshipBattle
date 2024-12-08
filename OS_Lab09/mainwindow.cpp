@@ -79,6 +79,7 @@ void MainWindow::on_ready_but_clicked()
 
 
     switch_page(GAME_PAGE);
+    grid2->startRecievingShoots(); // In future move to server signal when all players are ready
 
 }
 

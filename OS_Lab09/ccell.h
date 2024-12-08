@@ -40,8 +40,8 @@ public:
     int _width;
     int _height;
     int _typeShip;
-    bool isVertical=false;
-    bool isConToTable; // Check if ship connected to table
+    bool isVertical = false;
+    bool isConToTable = false; // Check if ship connected to table
     QPixmap* cellData;
 
 
@@ -70,6 +70,7 @@ protected:
     //Rotate the ship
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     //Return coordinates
@@ -80,6 +81,8 @@ private:
 
     //Paint the cell with (QPixmap *celldata)
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+signals:
+    void sendShootCoordinate(int n);
 };
 
 #endif // CCELL_H

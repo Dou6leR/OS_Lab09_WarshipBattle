@@ -1,6 +1,6 @@
 #include "cgrid.h"
 
-CGrid::CGrid(QGraphicsScene* in_scene, int PosX, int PosY)
+CGrid::CGrid(QGraphicsScene* in_scene, int PosX, int PosY, QObject *parent) : QObject(parent)
 {
     scene = in_scene;
     shipField.resize(100);
@@ -9,6 +9,7 @@ CGrid::CGrid(QGraphicsScene* in_scene, int PosX, int PosY)
         for(int y = 0; y < 10; y++)
         {
             shipField[x + y * 10] = new CCell(_cell, 0);
+            connect(shipField[x + y * 10], &CCell::sendShootCoordinate, this, &CGrid::recieveClickedCell);
             shipField[x + y * 10]->setPos(PosX + x * CCell::SIZE, PosY + y * CCell::SIZE);
             scene->addItem(shipField[x + y * 10]);
         }
@@ -33,4 +34,19 @@ void CGrid::SetCoolCursor()
     {
         //shipField[i]->setCursor(Qt::CrossCursor);
     }
+}
+void CGrid::startRecievingShoots()
+{
+    isServerAnswered = true;
+}
+void CGrid::recieveClickedCell(int n)
+{
+    if(isServerAnswered) // Don't change received cell until server answered than receive next cell
+    {
+        isServerAnswered = false;
+        receivedCell = n;
+        emit sendCellToServer(receivedCell);
+        qDebug() << n;
+    }
+
 }
