@@ -30,15 +30,23 @@ void MainWindow::switch_page(int page)
     case WELCOME_PAGE:
         this->ui->mw_pages->setCurrentWidget(this->ui->welcome);
         break;
+
     case SHIP_PLACE_PAGE:
+        ui->placing_View->setScene(scene);
         this->ui->mw_pages->setCurrentWidget(this->ui->ship_place);
         break;
+
     case SERVER_PAGE:
         this->ui->mw_pages->setCurrentWidget(this->ui->server_page);
         break;
+
     case GAME_PAGE:
+        grid1->show();
+        ships->SwitchGridForShip();
+        ui->game_View->setScene(scene);
         this->ui->mw_pages->setCurrentWidget(this->ui->game_page);
         break;
+
     default:
         qDebug() << "Page switch error index";
         //TODO: error or exception
@@ -56,7 +64,7 @@ void MainWindow::on_server_but_clicked()
 void MainWindow::on_player_but_clicked()
 {
     initShipsAndGrids();
-    ui->placing_View->setScene(scene);
+
     switch_page(SHIP_PLACE_PAGE);
 
     client = new Client("/tmp/socket");
@@ -71,10 +79,7 @@ void MainWindow::on_ready_but_clicked()
 
 
     switch_page(GAME_PAGE);
-    grid1->show();
-    ships->SwitchGridForShip();
 
-    ui->game_View->setScene(scene);
 }
 
 void MainWindow::initShipsAndGrids()
