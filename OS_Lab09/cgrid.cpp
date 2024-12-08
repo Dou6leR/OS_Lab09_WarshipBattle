@@ -39,6 +39,87 @@ void CGrid::startRecievingShoots()
 {
     isServerAnswered = true;
 }
+
+void CGrid::setDotsAroundKill(int x, int y, int size, bool isVertical)
+{
+    if(isVertical)
+    {
+        if(x != 0)
+        {
+            for(int i = 0; i < size; i++)
+                if(shipField[x + (y + i) * 10 - 1]->_typeShip == 0)
+                    shipField[x + (y + i) * 10 - 1]->changeType(_dot);
+
+            if(y != 0)
+                if(shipField[x + y * 10 - 11]->_typeShip == 0)
+                    shipField[x + y * 10 - 11]->changeType(_dot);
+
+            if(y + size - 1 != 9)
+                if(shipField[x + y * 10 + 10 * size - 1]->_typeShip == 0)
+                    shipField[x + y * 10 + 10 * size - 1]->changeType(_dot);
+        }
+        if(x != 9)
+        {
+            for(int i = 0; i < size; i++)
+                if(shipField[x + (y + i) * 10 + 1]->_typeShip == 0)
+                    shipField[x + (y + i) * 10 + 1]->changeType(_dot);
+
+            if(y != 0)
+                if(shipField[x + y * 10 - 9]->_typeShip == 0)
+                    shipField[x + y * 10 - 9]->changeType(_dot);
+
+            if(y + size - 1 != 9)
+                if(shipField[x + y * 10 + 10 * size + 1]->_typeShip == 0)
+                    shipField[x + y * 10 + 10 * size + 1]->changeType(_dot);
+        }
+        if(y != 0)
+            if(shipField[x + y * 10 - 10]->_typeShip == 0)
+                shipField[x + y * 10 - 10]->changeType(_dot);
+
+        if(y + size - 1 != 9)
+            if(shipField[x + y * 10 + 10 * size]->_typeShip == 0)
+                shipField[x + y * 10 + 10 * size]->changeType(_dot);
+    }
+    else
+    {
+        if(y != 0)
+        {
+            for(int i = 0; i < size; i++)
+                if(shipField[x + i + y * 10 - 10]->_typeShip == 0)
+                    shipField[x + i + y * 10 - 10]->changeType(_dot);
+
+            if(x != 0)
+                if(shipField[x + y * 10 - 11]->_typeShip == 0)
+                    shipField[x + y * 10 - 11]->changeType(_dot);
+
+            if(x + size - 1 != 9)
+                if(shipField[x + y * 10 - 10 + size]->_typeShip == 0)
+                    shipField[x + y * 10 - 10 + size]->changeType(_dot);
+        }
+        if(y != 9)
+        {
+            for(int i = 0; i < size; i++)
+                if(shipField[x + i + y * 10 + 10]->_typeShip == 0)
+                    shipField[x + i + y * 10 + 10]->changeType(_dot);
+
+            if(x != 0)
+                if(shipField[x + y * 10 + 9]->_typeShip == 0)
+                    shipField[x + y * 10 + 9]->changeType(_dot);
+
+            if(x + size - 1 != 9)
+                if(shipField[x + y * 10 + 10 + size]->_typeShip == 0)
+                    shipField[x + y * 10 + 10 + size]->changeType(_dot);
+        }
+        if(x != 0)
+            if(shipField[x + y * 10 - 1]->_typeShip == 0)
+                shipField[x + y * 10 - 1]->changeType(_dot);
+
+        if(x + size - 1 != 9)
+            if(shipField[x + y * 10 + size]->_typeShip == 0)
+                shipField[x + y * 10 + size]->changeType(_dot);
+    }
+}
+
 void CGrid::recieveClickedCell(int n)
 {
     if(isServerAnswered) // Don't change received cell until server answered than receive next cell
@@ -64,15 +145,34 @@ void CGrid::receiveHitMissDefender(int n, int type)
     {
         killOnTop.push_back(new CCell(_kill, 0));
         killOnTop.last()->setPos(CCell::SIZE * (n % 10), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
+        scene->addItem(killOnTop.last());
     }
 }
 
 void CGrid::recieveKillAttacker(int size, int *ship)
 {
+    bool isVertical = false;
+    int x = ship[0] % 10;
+    int y = ship[0] / 10;
+    if(size > 1)
+        if((ship[1] - ship[0]) == 10)
+            isVertical = true;
 
+
+    newShips.push_back(new CCell(size, 0));
+    newShips.last()->setPos(CCell::SIZE * (14 + x), CCell::SIZE * (3 + y));
+    scene->addItem(newShips.last());
+    setDotsAroundKill(x, y, size, isVertical);
+    isServerAnswered = true;
 }
 
 void CGrid::recieveKillDefender(int size, int *ship)
 {
-
+    bool isVertical = false;
+    int x = ship[0] % 10;
+    int y = ship[0] / 10;
+    if(size > 1)
+        if((ship[1] - ship[0]) == 10)
+            isVertical = true;
+    setDotsAroundKill(x, y, size, isVertical);
 }

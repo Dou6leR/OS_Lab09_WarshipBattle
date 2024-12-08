@@ -16,7 +16,10 @@ public:
     void SetCoolCursor();
 
     void startRecievingShoots();
+
 private:
+    void setDotsAroundKill(int x, int y, int size, bool isVertical);
+
     int receivedCell = -1;
     bool isServerAnswered = false;
     QGraphicsScene* scene;
