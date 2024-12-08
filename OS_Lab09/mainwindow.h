@@ -10,6 +10,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <QMessageBox>
+#include "cship.h"
+#include "cgrid.h"
 
 //UI managing
 #define W_WIDTH 800
@@ -46,13 +48,16 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    Client* client;
+    Server* server;
+
     //Current scene
     QGraphicsScene  *scene;
 
     //All visible CCell items
-    QVector<CCell*> shipField1;
-    QVector<CCell*> shipField2;
-    QVector<CCell*> ships;
+    CGrid* grid1;
+    CGrid* grid2;
+    CShip* ships;
 
     //Add all ships and 2 grids
     void initShipsAndGrids();
