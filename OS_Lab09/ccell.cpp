@@ -103,7 +103,16 @@ void CCell::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
                 setRotation(0);
                 isVertical = false;
             }
+            if(isConToTable)
+            {
+                isConToTable = false;
+                for(int i = 0; i < _width / SIZE; i++)
+                    ShipTable[PositionOfShip[i]] = false;
+                //moveBy(-(PositionOfShip[0] / 10 + 1) * CCell::SIZE, 0);
+                delete[] PositionOfShip;
+            }
             Q_UNUSED(event);
+
         }
     }
 }
@@ -185,6 +194,7 @@ QVariant CCell::itemChange(GraphicsItemChange change, const QVariant &value)
             isConToTable = false;
             for(int i = 0; i < _width / SIZE; i++)
                 ShipTable[PositionOfShip[i]] = false;
+            delete[] PositionOfShip;
         }
         // value is the new position.
         QPointF newPos = value.toPointF();
