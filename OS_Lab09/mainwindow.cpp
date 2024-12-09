@@ -42,6 +42,7 @@ void MainWindow::switch_page(int page)
 
     case GAME_PAGE:
         grid1->show();
+        grid2->SetCoolCursor();
         ships->SwitchGridForShip();
         ui->game_View->setScene(scene);
         this->ui->mw_pages->setCurrentWidget(this->ui->game_page);
@@ -79,6 +80,7 @@ void MainWindow::on_ready_but_clicked()
 
 
     switch_page(GAME_PAGE);
+    grid2->startRecievingShoots(); // In future move to server signal when all players are ready
 
 }
 
