@@ -134,6 +134,7 @@ void MainWindow::initShipsAndGrids()
 void MainWindow::connections_init(){
     connect(ui->random_but, &QPushButton::clicked, ships, &CShip::randomShipsPositions);
     connect(ships, &CShip::ShipPositions, client, &Client::send_ship_positions);
+    connect(grid2, &CGrid::sendCellToServer, client, &Client::send_shoot);
     connect(client, &Client::to_shooter_hit_msg, grid2, &CGrid::recieveHitAttacker, Qt::QueuedConnection);
     connect(client, &Client::to_shooter_miss_msg, grid2, &CGrid::recieveMissAttacker, Qt::QueuedConnection);
     connect(client, &Client::shooter_kill_msg, grid2, &CGrid::recieveKillAttacker, Qt::QueuedConnection);

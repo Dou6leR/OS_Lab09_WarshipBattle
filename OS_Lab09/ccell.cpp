@@ -5,7 +5,7 @@
 QPixmap* CCell::dot;
 QPixmap* CCell::cell;
 QPixmap* CCell::hit;
-QPixmap* CCell::kill;
+QPixmap* CCell::cell_kill;
 QPixmap* CCell::sh_1;
 QPixmap* CCell::sh_2;
 QPixmap* CCell::sh_3;
@@ -54,6 +54,11 @@ CCell::CCell(int typeShip, bool IsMovable, QObject *parent) : QObject(parent), Q
         _height = SIZE;
         break;
 
+    case _cell_kill:
+        cellData = cell_kill;
+        _width = SIZE;
+        _height = SIZE;
+        break;
     default:
         break;
     }
@@ -76,7 +81,7 @@ void CCell::initPixmap()
 {
     dot = new QPixmap(":/images/dot.png");
     cell = new QPixmap(":/images/cell.png");
-    kill = new QPixmap(":/images/kill.png");
+    cell_kill = new QPixmap(":/images/kill.png");
     hit = new QPixmap(":/images/hit.png");
     sh_1 = new QPixmap(":/images/sh_1.png");
     sh_2 = new QPixmap(":/images/sh_2.png");
@@ -169,8 +174,8 @@ void CCell::changeType(int typeShip)
         _height = SIZE;
         break;
 
-    case _kill:
-        cellData = kill;
+    case _cell_kill:
+        cellData = cell_kill;
         _width = SIZE;
         _height = SIZE;
         break;
@@ -183,7 +188,7 @@ void CCell::changeType(int typeShip)
 
 void CCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0, 0, *cellData, 0, 0, _width, _height);
+    painter->drawPixmap(0, 0, _width, _height, *cellData);
     Q_UNUSED(option);
     Q_UNUSED(widget);
 }

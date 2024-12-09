@@ -1,6 +1,9 @@
 #include "client.h"
 #include <QDebug>
 
+QMutex mutex;
+QWaitCondition condition;
+bool wait_for_msg;
 ClientController::ClientController(Client *client): m_client(client){}
 
 Client::Client(const QString& path) : socket_path(path), client_socket(-1) {
@@ -61,7 +64,7 @@ void Client::client_init(){
     connect( client_ctrl, &ClientController::finished, thread, &QThread::quit);
     connect( client_ctrl, &ClientController::finished, client_ctrl, &ClientController::deleteLater);
     connect( thread, &QThread::finished, thread, &QThread::deleteLater);
-    connect(this, &Client::wait_unlock, client_ctrl, &ClientController::wait_unlock, Qt::QueuedConnection);
+    connect(this, &Client::wait_unlock, client_ctrl, &ClientController::wait_unlock);
 
     connect(client_ctrl, &ClientController::to_receiver_hit_msg, this, &Client::s_to_receiver_hit_msg, Qt::QueuedConnection);
     connect(client_ctrl, &ClientController::to_receiver_miss_msg, this, &Client::s_to_receiver_miss_msg, Qt::QueuedConnection);
@@ -75,7 +78,11 @@ void Client::client_init(){
 }
 
 void ClientController::wait_unlock(){
+    qDebug() << "wait_for_msg = true";
+    mutex.lock();
     wait_for_msg = true;
+    condition.wakeOne();
+    mutex.unlock();
 }
 
 void ClientController::process_client(){
@@ -90,15 +97,26 @@ void ClientController::process_client(){
         QVector<int> ship_cord;
         do{
             qDebug() << wait_for_msg;
+            mutex.lock();
+            while(!wait_for_msg)
+            {
+                condition.wait(&mutex);
+            }
+            mutex.unlock();
             if(wait_for_msg){
                 qDebug() << "AAAAAAAAAA Entered waiting for message";
                 QString data = m_client->receive_data();
+                qDebug() << "Receive response from server about shoot: "<< data;
                 QList<QString> data_list = data.split(" ");
                 message_type = data_list[0].toInt();
+                for(int i = 0; i < data_list.size(); i++)
+                    qDebug() << i << ": " << data_list[i];
                 switch(message_type){
                 case TO_SHOOTER_HIT_MSG:      //I am a shooter
                     emit to_shooter_hit_msg(data_list[1].toInt()); //lock
+                    mutex.lock();
                     wait_for_msg = false;
+                    mutex.unlock();
                     break;
                 case TO_SHOOTER_MISS_MSG:
                     emit to_shooter_miss_msg(data_list[1].toInt()); //ne lock
@@ -108,7 +126,9 @@ void ClientController::process_client(){
                     break;
                 case TO_RECEIVER_MISS_MSG:
                     emit to_receiver_miss_msg(data_list[1].toInt()); //lock
+                    mutex.lock();
                     wait_for_msg = false;
+                    mutex.unlock();
                     break;
                 case SHOOTER_KILL_MSG:
                     for(int i = 1; i< data_list.size(); i++){       //lock
@@ -116,7 +136,9 @@ void ClientController::process_client(){
                     }
                     emit shooter_kill_msg(ship_cord);
                     ship_cord.clear();
+                    mutex.lock();
                     wait_for_msg = false;
+                    mutex.unlock();
                     break;
                 case RECEIVER_KILL_MSG:
                     for(int i = 1; i< data_list.size(); i++){       //ne lock
@@ -129,10 +151,15 @@ void ClientController::process_client(){
                     qDebug() << data;
                     emit ready_msg(data_list[1].toInt());
                     if(data_list[1].toInt()){
+
+                        mutex.lock();
                         wait_for_msg = false;
+                        mutex.unlock();
                     }
                     else{
+                        mutex.lock();
                         wait_for_msg = true;
+                        mutex.unlock();
                     }
                     break;
                 }
@@ -155,16 +182,27 @@ void ClientController::process_client(){
 void Client::send_shoot(int n){
     QString data = QString::number(SHOOT_MSG);
     data += " " + QString::number(n);
+    qDebug() << "ShootDAta: " << data;
+    mutex.lock();
+    wait_for_msg = true;
+    condition.wakeOne();
+    mutex.unlock();
     send_data(data);
-    emit wait_unlock();
+    //emit wait_unlock();
+
 }
 
 void Client::send_ship_positions(QString positions){
     QString data = QString::number(SHIP_PLACEMENT_MSG);
     data += " " + positions;
     qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << data;
+    //emit wait_unlock();
+
+    mutex.lock();
+    wait_for_msg = true;
+    condition.wakeOne();
+    mutex.unlock();
     send_data(data);
-    emit wait_unlock();
 }
 
 
@@ -180,6 +218,7 @@ void Client::s_to_shooter_miss_msg(int position)
 
 void Client::s_to_receiver_hit_msg(int position)
 {
+    qDebug() << position;
     emit to_receiver_hit_msg(position);
 }
 

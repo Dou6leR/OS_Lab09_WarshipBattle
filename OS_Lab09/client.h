@@ -10,8 +10,13 @@
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QtGlobal>
 #include "exception.h"
 #include "my_message.h"
+
+extern QMutex mutex;
+extern QWaitCondition condition;
+extern bool wait_for_msg;
 
 class Client : public QObject
 {
@@ -25,6 +30,7 @@ public:
     QString receive_data();
     void close_connection();
     void client_init();
+
 signals:
     void wait_unlock();
 
@@ -64,8 +70,11 @@ class ClientController : public QObject
 {
     Q_OBJECT
 public:
+
     explicit ClientController(Client* client);
-    bool wait_for_msg = false;
+
+
+    Client* m_client;
 public slots:
     void wait_unlock();
     void process_client();
@@ -85,7 +94,7 @@ signals:
     void finished();
     void error(QString err);
 private:
-    Client* m_client;
+
 };
 
 

@@ -129,28 +129,36 @@ void CGrid::recieveClickedCell(int n)
 
 void CGrid::recieveMissAttacker(int n)
 {
+    qDebug() << "recieveMissAttacker" << n;
     shipField[n]->changeType(_dot);
     isMyTurn = false;
 }
 
 void CGrid::recieveHitAttacker(int n)
 {
+    qDebug() << "recievehitAttacker" << n;
     shipField[n]->changeType(_hit);
     isMyTurn = true;
 }
 
 void CGrid::recieveMissDefender(int n)
 {
+    qDebug() << "recieveMissDefender" << n;
     shipField[n]->changeType(_dot);
     isMyTurn = true;
 }
 
 void CGrid::recieveHitDefender(int n)
 {
-    killOnTop.push_back(new CCell(_kill, 0));
-    killOnTop.last()->setPos(CCell::SIZE * (n % 10), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
-    scene->addItem(killOnTop.last());
+    qDebug() << "recieveHitDefender" << n;
+    CCell *tmp = new CCell(_cell_kill, 0);
+    qDebug() << "recieveHitDefender" << n;
+    tmp->setPos(CCell::SIZE * (n % 10 + 1), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
+    qDebug() << "recieveHitDefender" << n;
+    scene->addItem(tmp);
+    qDebug() << "recieveHitDefender" << n;
     isMyTurn = false;
+
 }
 
 void CGrid::recieveKillAttacker(QVector<int> ship)

@@ -15,7 +15,7 @@ enum CellTypes
     _sh_4,
     _dot,
     _hit,
-    _kill
+    _cell_kill
 };
 
 
@@ -53,7 +53,7 @@ public:
     static QPixmap* sh_4;
     static QPixmap* dot;
     static QPixmap* hit;
-    static QPixmap* kill;
+    static QPixmap* cell_kill;
 
     //Initialize types of Pixmap
     static void initPixmap();
