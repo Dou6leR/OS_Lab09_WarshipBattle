@@ -1,6 +1,6 @@
 #include "cship.h"
 
-CShip::CShip(QGraphicsScene* in_scene, int PosX, int PosY)
+CShip::CShip(QGraphicsScene* in_scene, int PosX, int PosY, QObject *parent) : QObject(parent)
 {
     scene = in_scene;
     ships.resize(10);
@@ -62,7 +62,7 @@ bool CShip::checkAllConection()
     return false;
 }
 
-QString CShip::getAllShipPositions()
+void CShip::getAllShipPositions()
 {
     QString positions = "";
     for(int i = 0; i < SHIPSNUM; i++)
@@ -71,5 +71,5 @@ QString CShip::getAllShipPositions()
             positions += QString::number(ships[i]->PositionOfShip[j]) + " ";
         positions += ",";
     }
-    return positions;
+    emit ShipPositions(positions);
 }

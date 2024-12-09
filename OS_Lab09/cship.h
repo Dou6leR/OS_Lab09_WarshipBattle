@@ -4,17 +4,20 @@
 #include <QMessageBox>
 #include <QString>
 #include "ccell.h"
-class CShip
+class CShip : public QObject
 {
+    Q_OBJECT
 public:
-    CShip();
-    CShip(QGraphicsScene* in_scene, int PosX, int PosY);
+    //CShip();
+    CShip(QGraphicsScene* in_scene, int PosX, int PosY,  QObject *parent = 0);
 
     void SwitchGridForShip();
 
     bool checkAllConection();
 
-    QString getAllShipPositions();
+    void getAllShipPositions();
+signals:
+    void ShipPositions(QString positions);
 private:
     QGraphicsScene* scene;
     QVector<CCell*> ships;

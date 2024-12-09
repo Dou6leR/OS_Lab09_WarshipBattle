@@ -24,6 +24,7 @@ HEADERS += \
     cship.h \
     exception.h \
     mainwindow.h \
+    my_message.h \
     server.h
 
 FORMS += \

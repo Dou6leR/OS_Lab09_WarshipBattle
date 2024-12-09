@@ -71,16 +71,66 @@ void ClientController::process_client(){
 
         m_client->connect_to_server();
 
-        while (true)
-        {
+        int message_type;
+        QVector<int> ship_cord;
+        do{
             QString data = m_client->receive_data();
-            qDebug() << "Message from server: " << data;
-            sleep(5);
-            m_client->send_data("Message from client");
+            QList<QString> data_list = data.split(" ");
+            message_type = data_list[0].toInt();
+            switch(message_type){
+            case TO_SHOOTER_HIT_MSG:      //I am a shooter
+                emit to_shooter_hit_msg(data_list[1].toInt());
+                break;
+            case TO_SHOOTER_MISS_MSG:
+                emit to_shooter_miss_msg(data_list[1].toInt());
+                break;
+            case TO_RECEIVER_HIT_MSG:
+                emit to_receiver_hit_msg(data_list[1].toInt());
+                break;
+            case TO_RECEIVER_MISS_MSG:
+                emit to_receiver_miss_msg(data_list[1].toInt());
+                break;
+            case SHOOTER_KILL_MSG:
+                for(int i = 1; i< data_list.size(); i++){
+                    ship_cord.append(data_list[i].toInt());
+                }
+                emit shooter_kill_msg(ship_cord);
+                ship_cord.clear();
+                break;
+            case RECEIVER_KILL_MSG:
+                for(int i = 1; i< data_list.size(); i++){
+                    ship_cord.append(data_list[i].toInt());
+                }
+                emit receiver_kill_msg(ship_cord);
+                ship_cord.clear();
+                break;
+            case READY_MSG:
+                emit ready_msg(data_list[1].toInt());
+                break;
+            }
+        }
+        while((message_type != WIN_MSG) && (message_type != LOSE_MSG));
+        if (message_type == WIN_MSG){
+            emit win_lose_msg(1);
+        }
+        else{
+            emit win_lose_msg(0);
         }
     }
     catch(std::exception exc)
     {
         qDebug() << exc.what();
     }
+}
+
+void Client::send_shoot(int n){
+    QString data = QString::number(SHOOT_MSG);
+    data += " " + QString::number(n);
+    send_data(data);
+}
+
+void Client::send_ship_positions(QString positions){
+    QString data = QString::number(SHIP_PLACEMENT_MSG);
+    data += " " + positions;
+    send_data(data);
 }

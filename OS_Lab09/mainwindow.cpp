@@ -76,7 +76,7 @@ void MainWindow::on_ready_but_clicked()
     if(ships->checkAllConection())
         return;
 
-    client->send_data(ships->getAllShipPositions());
+    //connect send_ship_positions slot to ship_positions signal
 
 
     switch_page(GAME_PAGE);

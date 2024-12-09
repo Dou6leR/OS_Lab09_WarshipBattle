@@ -9,6 +9,7 @@
 #include "exception.h"
 #include <QThread>
 #include <QObject>
+#include "my_message.h"
 
 class Server : public QObject{
     Q_OBJECT
@@ -23,6 +24,8 @@ public:
     QString receive_data(int client_socket);
     void close_server();
     void server_init();
+public slots:
+
 private:
     int server_socket;
     struct sockaddr_un server_address;
