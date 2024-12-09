@@ -119,11 +119,13 @@ void ServerController::process_server(){
             for(int i = 1; i < data_list.size(); i++){
                 client1_ships.append(QMap<int,bool>());
                 for(auto c : data_list[i].split(",")){
-                    client1_ships[i].insert(c.toInt(), false);
+                    client1_ships[i-1].insert(c.toInt(), false);
                 }
             }
+            m_server->put_in_log("Player 1 sent right message. Ship placement: \n" + data);
         }
         else{
+            m_server->put_in_log("Player 1 sent wrong type of message");
             throw Exception("Wrong type of message");
         }
 
@@ -133,20 +135,66 @@ void ServerController::process_server(){
             for(int i = 1; i < data_list.size(); i++){
                 client2_ships.append(QMap<int, bool>());
                 for(auto c : data_list[i].split(",")){
-                    client2_ships[i].insert(c.toInt(), false);
+                    client2_ships[i-1].insert(c.toInt(), false);
                 }
             }
+            m_server->put_in_log("Player 2 sent right message. Ship placement: \n" + data);
         }
         else{
+            m_server->put_in_log("Player 2 sent wrong type of message");
             throw Exception("Wrong type of message");
         }
 
-        while(true){
-            data = "Your turn";
+        bool turn = QRandomGenerator::global()->bounded(2);
+        data = QString::number(READY_MSG) + " 1";
+        m_server->send_data(client_sockets[turn], data);
+        data = QString::number(READY_MSG) + " 0";
+        m_server->send_data(client_sockets[!turn], data);
 
-            m_server->send_data(client_sockets[0], data);
-            data = m_server->receive_data(client_sockets[0]);
-            qDebug() << "Message from client 1: " << data;
+        while(true){
+            data = m_server->receive_data(client_sockets[turn]);
+            data_list = data.split(" ");
+            if (data_list[0].toInt() != SHOOT_MSG){
+                m_server->put_in_log("Wrong type of message " + data + "\nSocket: " + QString::number(client_sockets[turn]));
+                throw Exception("Wrong type of message");
+            }
+            bool is_killed;
+            bool is_missed = true;
+            for(auto ship : (turn ? client1_ships : client2_ships )){
+                if(ship.contains(data_list[1].toInt())){
+                    is_missed = false;
+                    ship[data_list[1].toInt()] = true;
+                    is_killed = check_killed(ship);
+                    if (is_killed){
+                        data = QString::number(SHOOTER_KILL_MSG);
+                        for(auto cord : ship.keys()){
+                            data += " " + QString::number(cord);
+                        }
+                        m_server->send_data(client_sockets[turn], data);
+
+                        data = QString::number(RECEIVER_KILL_MSG);
+                        for(auto cord : ship.keys()){
+                            data += " " + QString::number(cord);
+                        }
+                        m_server->send_data(client_sockets[!turn], data);
+                    }
+                    else{
+                        data = QString::number(TO_SHOOTER_HIT_MSG) + " " + data_list[1];
+                        m_server->send_data(client_sockets[turn], data);
+
+                        data = QString::number(TO_RECEIVER_HIT_MSG) +  " " + data_list[1];
+                        m_server->send_data(client_sockets[!turn], data);
+                    }
+                    break;
+                }
+            }
+            if (is_missed){
+                data = QString::number(TO_SHOOTER_MISS_MSG) +  " " + data_list[1];
+                m_server->send_data(client_sockets[turn], data);
+
+                data = QString::number(TO_RECEIVER_MISS_MSG) +  " " + data_list[1];
+                m_server->send_data(client_sockets[!turn], data);
+            }
 
             m_server->send_data(client_sockets[1], data);
             data = m_server->receive_data(client_sockets[1]);
@@ -157,4 +205,13 @@ void ServerController::process_server(){
     {
         qDebug() << exc.what();
     }
+}
+
+bool ServerController::check_killed(QMap<int,bool> ship){
+    for(bool cord : ship.values()){
+        if(cord == false){
+            return false;
+        }
+    }
+    return true;
 }

@@ -180,6 +180,11 @@
         <height>500</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
+      </property>
       <property name="cursorWidth">
        <number>0</number>
       </property>
@@ -229,7 +234,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

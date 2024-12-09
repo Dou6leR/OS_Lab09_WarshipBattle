@@ -61,7 +61,12 @@ void Client::client_init(){
     connect( client_ctrl, &ClientController::finished, thread, &QThread::quit);
     connect( client_ctrl, &ClientController::finished, client_ctrl, &ClientController::deleteLater);
     connect( thread, &QThread::finished, thread, &QThread::deleteLater);
+    connect(this, &Client::wait_unlock, client_ctrl, &ClientController::wait_unlock);
     thread->start();
+}
+
+void ClientController::wait_unlock(){
+    wait_for_msg = true;
 }
 
 void ClientController::process_client(){
@@ -71,42 +76,55 @@ void ClientController::process_client(){
 
         m_client->connect_to_server();
 
-        int message_type;
+        wait_for_msg = false;
+        int message_type = -1;
         QVector<int> ship_cord;
         do{
-            QString data = m_client->receive_data();
-            QList<QString> data_list = data.split(" ");
-            message_type = data_list[0].toInt();
-            switch(message_type){
-            case TO_SHOOTER_HIT_MSG:      //I am a shooter
-                emit to_shooter_hit_msg(data_list[1].toInt());
-                break;
-            case TO_SHOOTER_MISS_MSG:
-                emit to_shooter_miss_msg(data_list[1].toInt());
-                break;
-            case TO_RECEIVER_HIT_MSG:
-                emit to_receiver_hit_msg(data_list[1].toInt());
-                break;
-            case TO_RECEIVER_MISS_MSG:
-                emit to_receiver_miss_msg(data_list[1].toInt());
-                break;
-            case SHOOTER_KILL_MSG:
-                for(int i = 1; i< data_list.size(); i++){
-                    ship_cord.append(data_list[i].toInt());
+            if(wait_for_msg){
+                qDebug() << "AAAAAAAAAA Entered waiting for message";
+                QString data = m_client->receive_data();
+                QList<QString> data_list = data.split(" ");
+                message_type = data_list[0].toInt();
+                switch(message_type){
+                case TO_SHOOTER_HIT_MSG:      //I am a shooter
+                    emit to_shooter_hit_msg(data_list[1].toInt()); //lock
+                    wait_for_msg = false;
+                    break;
+                case TO_SHOOTER_MISS_MSG:
+                    emit to_shooter_miss_msg(data_list[1].toInt()); //ne lock
+                    break;
+                case TO_RECEIVER_HIT_MSG:
+                    emit to_receiver_hit_msg(data_list[1].toInt()); //ne lock
+                    break;
+                case TO_RECEIVER_MISS_MSG:
+                    emit to_receiver_miss_msg(data_list[1].toInt()); //lock
+                    wait_for_msg = false;
+                    break;
+                case SHOOTER_KILL_MSG:
+                    for(int i = 1; i< data_list.size(); i++){       //lock
+                        ship_cord.append(data_list[i].toInt());
+                    }
+                    emit shooter_kill_msg(ship_cord);
+                    ship_cord.clear();
+                    wait_for_msg = false;
+                    break;
+                case RECEIVER_KILL_MSG:
+                    for(int i = 1; i< data_list.size(); i++){       //ne lock
+                        ship_cord.append(data_list[i].toInt());
+                    }
+                    emit receiver_kill_msg(ship_cord);
+                    ship_cord.clear();
+                    break;
+                case READY_MSG:
+                    emit ready_msg(data_list[1].toInt());
+                    if(data_list[1].toInt()){
+                        wait_for_msg = false;
+                    }
+                    else{
+                        wait_for_msg = true;
+                    }
+                    break;
                 }
-                emit shooter_kill_msg(ship_cord);
-                ship_cord.clear();
-                break;
-            case RECEIVER_KILL_MSG:
-                for(int i = 1; i< data_list.size(); i++){
-                    ship_cord.append(data_list[i].toInt());
-                }
-                emit receiver_kill_msg(ship_cord);
-                ship_cord.clear();
-                break;
-            case READY_MSG:
-                emit ready_msg(data_list[1].toInt());
-                break;
             }
         }
         while((message_type != WIN_MSG) && (message_type != LOSE_MSG));
@@ -127,10 +145,13 @@ void Client::send_shoot(int n){
     QString data = QString::number(SHOOT_MSG);
     data += " " + QString::number(n);
     send_data(data);
+    emit wait_unlock();
 }
 
 void Client::send_ship_positions(QString positions){
     QString data = QString::number(SHIP_PLACEMENT_MSG);
     data += " " + positions;
+    qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << data;
     send_data(data);
+    emit wait_unlock();
 }

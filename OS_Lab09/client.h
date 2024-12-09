@@ -23,6 +23,8 @@ public:
     QString receive_data();
     void close_connection();
     void client_init();
+signals:
+    void wait_unlock();
 public slots:
     void send_shoot(int n);
     void send_ship_positions(QString positions);
@@ -37,7 +39,9 @@ class ClientController : public QObject
     Q_OBJECT
 public:
     explicit ClientController(Client* client);
+    bool wait_for_msg = false;
 public slots:
+    void wait_unlock();
     void process_client();
 signals:
     void to_shooter_hit_msg(int position);

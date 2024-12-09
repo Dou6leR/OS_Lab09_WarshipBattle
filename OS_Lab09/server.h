@@ -9,6 +9,7 @@
 #include "exception.h"
 #include <QThread>
 #include <QObject>
+#include <QRandomGenerator>
 #include "my_message.h"
 
 class Server : public QObject{
@@ -50,6 +51,7 @@ signals:
 
     void log_signal(QString log);
 private:
+    bool check_killed(QMap<int,bool> ship);
     Server* m_server;
     QVector<int> client_sockets;
 };
