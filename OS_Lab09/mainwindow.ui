@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
@@ -171,7 +171,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="server_page">
-     <widget class="QPlainTextEdit" name="server_log">
+     <widget class="QTextEdit" name="server_log">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -179,12 +179,6 @@
         <width>740</width>
         <height>500</height>
        </rect>
-      </property>
-      <property name="cursorWidth">
-       <number>0</number>
-      </property>
-      <property name="textInteractionFlags">
-       <set>Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
      </widget>
     </widget>
@@ -229,7 +223,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

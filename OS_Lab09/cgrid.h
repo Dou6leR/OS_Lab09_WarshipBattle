@@ -38,9 +38,9 @@ public slots:
 
     void recieveHitDefender(int n); // For defender to change first grid
 
-    void recieveKillAttacker(int size, int *ship); // For attacker to change second grid
+    void recieveKillAttacker(QVector<int> ship); // For attacker to change second grid
 
-    void recieveKillDefender(int size, int *ship); // For defender to change first grid
+    void recieveKillDefender(QVector<int> ship); // For defender to change first grid
 signals:
     void sendCellToServer(int n); // send further to client/server
 };

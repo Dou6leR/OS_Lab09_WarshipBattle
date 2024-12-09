@@ -3,7 +3,7 @@
 
 ServerController::ServerController(Server *server): m_server(server){}
 
-Server::Server(const QString& path, QPlainTextEdit* _server_log)
+Server::Server(const QString& path, QTextEdit* _server_log)
     : server_log(_server_log)
     , server_socket(-1)
     , socket_path(path)
@@ -88,21 +88,61 @@ void Server::server_init(){
     connect( server_ctrl, &ServerController::finished, thread, &QThread::quit);
     connect( server_ctrl, &ServerController::finished, server_ctrl, &ServerController::deleteLater);
     connect( thread, &QThread::finished, thread, &QThread::deleteLater);
+    connect(server_ctrl, &ServerController::log_signal, this, &Server::put_in_log, Qt::QueuedConnection);
+
     thread->start();
+}
+
+void Server::put_in_log(QString log){
+    emit log_signal(log);
 }
 
 void ServerController::process_server(){
     try{
         m_server->create_socket();
+        m_server->put_in_log("Socket is created");
         m_server->bind_socket();
+        m_server->put_in_log("Socket is binded");
         m_server->listen_for_clients();
+        m_server->put_in_log("Server listens for clients");
 
         client_sockets.append(m_server->accept_client());
+        m_server->put_in_log("First client accepted. Socket: " + QString::number(client_sockets[0]));
 
         client_sockets.append(m_server->accept_client());
+        m_server->put_in_log("Second client accepted. Socket: " + QString::number(client_sockets[1]));
+
+        // Converting char* message to QVector<QMap<int(position of ship), bool(true is hit)>>
+        QString data = m_server->receive_data(client_sockets[0]);
+        QList<QString> data_list = data.split(" ");
+        if (data_list[0].toInt() == SHIP_PLACEMENT_MSG){
+            for(int i = 1; i < data_list.size(); i++){
+                client1_ships.append(QMap<int,bool>());
+                for(auto c : data_list[i].split(",")){
+                    client1_ships[i].insert(c.toInt(), false);
+                }
+            }
+        }
+        else{
+            throw Exception("Wrong type of message");
+        }
+
+        data = m_server->receive_data(client_sockets[1]);
+        data_list = data.split(" ");
+        if (data_list[0].toInt() == SHIP_PLACEMENT_MSG){
+            for(int i = 1; i < data_list.size(); i++){
+                client2_ships.append(QMap<int, bool>());
+                for(auto c : data_list[i].split(",")){
+                    client2_ships[i].insert(c.toInt(), false);
+                }
+            }
+        }
+        else{
+            throw Exception("Wrong type of message");
+        }
 
         while(true){
-            QString data = "Your turn";
+            data = "Your turn";
 
             m_server->send_data(client_sockets[0], data);
             data = m_server->receive_data(client_sockets[0]);

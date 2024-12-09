@@ -61,16 +61,19 @@ void MainWindow::on_server_but_clicked()
     switch_page(SERVER_PAGE);
   
     server = new Server("/tmp/socket", ui->server_log);
+
+    connect(server, &Server::log_signal, this, &MainWindow::put_in_log);
 }
 
 void MainWindow::on_player_but_clicked()
 {
     initShipsAndGrids();
 
-    QObject::connect(ui->random_but, &QPushButton::clicked, ships, &CShip::randomShipsPositions);
     switch_page(SHIP_PLACE_PAGE);
 
     client = new Client("/tmp/socket");
+
+    connections_init();
 }
 
 void MainWindow::on_ready_but_clicked()
@@ -78,12 +81,13 @@ void MainWindow::on_ready_but_clicked()
     if(ships->checkAllConection())
         return;
 
-    //connect send_ship_positions slot to ship_positions signal
-
-
     switch_page(GAME_PAGE);
     grid2->startRecievingShoots(); // In future move to server signal when all players are ready
 
+}
+
+void MainWindow::put_in_log(QString log){
+    ui->server_log->setText(log);
 }
 
 void MainWindow::initShipsAndGrids()
@@ -99,4 +103,9 @@ void MainWindow::initShipsAndGrids()
     QRectF view_rect = scene->itemsBoundingRect();
     view_rect.adjust(0, 0, 0, 0);
     scene->setSceneRect(view_rect);
+}
+
+void MainWindow::connections_init(){
+    connect(ui->random_but, &QPushButton::clicked, ships, &CShip::randomShipsPositions);
+    connect(ships, &CShip::ShipPositions, client, &Client::send_ship_positions);
 }

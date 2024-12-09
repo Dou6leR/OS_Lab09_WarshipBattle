@@ -157,31 +157,31 @@ void CGrid::recieveHitDefender(int n)
     isMyTurn = false;
 }
 
-void CGrid::recieveKillAttacker(int size, int *ship)
+void CGrid::recieveKillAttacker(QVector<int> ship)
 {
     bool isVertical = false;
     int x = ship[0] % 10;
     int y = ship[0] / 10;
-    if(size > 1)
+    if(ship.size() > 1)
         if((ship[1] - ship[0]) == 10)
             isVertical = true;
 
 
-    newShips.push_back(new CCell(size, 0));
+    newShips.push_back(new CCell(ship.size(), 0));
     newShips.last()->setPos(CCell::SIZE * (14 + x), CCell::SIZE * (3 + y));
     scene->addItem(newShips.last());
-    setDotsAroundKill(x, y, size, isVertical);
+    setDotsAroundKill(x, y, ship.size(), isVertical);
     isMyTurn = true;
 }
 
-void CGrid::recieveKillDefender(int size, int *ship)
+void CGrid::recieveKillDefender(QVector<int> ship)
 {
     bool isVertical = false;
     int x = ship[0] % 10;
     int y = ship[0] / 10;
-    if(size > 1)
+    if(ship.size() > 1)
         if((ship[1] - ship[0]) == 10)
             isVertical = true;
-    setDotsAroundKill(x, y, size, isVertical);
+    setDotsAroundKill(x, y, ship.size(), isVertical);
     isMyTurn = false;
 }
