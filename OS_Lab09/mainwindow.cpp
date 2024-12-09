@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->game_View->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     //One time init
     CCell::initPixmap();
+
 }
 
 MainWindow::~MainWindow()
@@ -66,6 +67,7 @@ void MainWindow::on_player_but_clicked()
 {
     initShipsAndGrids();
 
+    QObject::connect(ui->random_but, &QPushButton::clicked, ships, &CShip::randomShipsPositions);
     switch_page(SHIP_PLACE_PAGE);
 
     client = new Client("/tmp/socket");
