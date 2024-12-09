@@ -63,6 +63,9 @@ public:
 
     void rotateShip();
 
+    //Check conflicts with other ships
+    bool isConflicted(int x, int y);
+
     //Table to check ship conficts static to make shared between other ships
     static bool* ShipTable;
     //Position of current ship
@@ -78,8 +81,7 @@ private:
     //Return coordinates
     QRectF boundingRect() const;
 
-    //Check conflicts with other ships
-    bool isConflicted(int x, int y);
+
 
     //Paint the cell with (QPixmap *celldata)
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

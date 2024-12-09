@@ -73,3 +73,60 @@ void CShip::getAllShipPositions()
     }
     emit ShipPositions(positions);
 }
+
+void CShip::randomShipsPositions()
+{
+    int pos = -1;
+    bool isVertical = false;
+    for(int currentship = 0; currentship < SHIPSNUM; currentship++)
+    {
+        if(ships[currentship]->isConToTable)
+        {
+            ships[currentship]->isConToTable = false;
+            for(int i = 0; i < ships[currentship]->_typeShip; i++)
+                ships[currentship]->ShipTable[ships[currentship]->PositionOfShip[i]] = false;
+            delete[] ships[currentship]->PositionOfShip;
+        }
+    }
+
+    for(int currentship = 0; currentship < SHIPSNUM; currentship++)
+    {
+        int size = ships[currentship]->_typeShip;
+        while(true) // Break only if ship fits
+        {
+            pos = QRandomGenerator::global()->bounded(100);
+            int x = pos % 10;
+            int y = pos / 10;
+            isVertical  = QRandomGenerator::global()->bounded(2);
+            if(isVertical)
+            {
+                if(y + size > 10)
+                    continue;
+            }
+            else
+            {
+                if(x + size > 10)
+                    continue;
+            }
+            if(ships[currentship]->isVertical != isVertical)
+                ships[currentship]->rotateShip();
+
+            if(ships[currentship]->isConflicted(x, y))
+                continue;
+            else
+            {
+                ships[currentship]->PositionOfShip = new int[size];
+
+                for(int i = 0; i < size; i++)
+                {
+                    ships[currentship]->PositionOfShip[i] = x + y * 10 + i * (isVertical ? 10 : 1);
+                    ships[currentship]->ShipTable[ships[currentship]->PositionOfShip[i]] = true;
+                }
+                ships[currentship]->isConToTable = true;
+                ships[currentship]->setPos(CCell::SIZE * (14 + x), CCell::SIZE * (3 + y));
+                break;
+            }
+
+        }
+    }
+}
