@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
@@ -149,6 +149,26 @@
        </size>
       </property>
      </widget>
+     <widget class="QPushButton" name="random_but">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>460</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Random</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="server_page">
      <widget class="QPlainTextEdit" name="server_log">
@@ -209,7 +229,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
