@@ -91,6 +91,15 @@ void MainWindow::put_in_log(QString log){
     ui->server_log->moveCursor(QTextCursor::End);
     ui->server_log->textCursor().insertText("\n");
     ui->server_log->textCursor().insertText(log);
+    ui->server_log->moveCursor(QTextCursor::End);
+
+    for (int i=0; i<15; i++)
+    {
+        ui->server_log->moveCursor(QTextCursor::End);
+        ui->server_log->textCursor().insertText("\n");
+        ui->server_log->textCursor().insertText(QString::number(i));
+        ui->server_log->moveCursor(QTextCursor::End);
+    }
 }
 
 void MainWindow::initShipsAndGrids()
