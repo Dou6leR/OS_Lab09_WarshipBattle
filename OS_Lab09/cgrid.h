@@ -21,7 +21,7 @@ private:
     void setDotsAroundKill(int x, int y, int size, bool isVertical);
 
     int receivedCell = -1;
-    bool isServerAnswered = false;
+    bool isMyTurn = false;
     QGraphicsScene* scene;
     QVector<CCell*> shipField;
     QVector<CCell*> killOnTop;
@@ -30,9 +30,13 @@ private:
 public slots:
     void recieveClickedCell(int n); // received from ccell
 
-    void recieveHitMissAttacker(int n, int type); // For attacker to change second grid
+    void recieveMissAttacker(int n); // For attacker to change second grid
 
-    void receiveHitMissDefender(int n, int type); // For defender to change first grid
+    void recieveHitAttacker(int n); // For attacker to change second grid
+
+    void recieveMissDefender(int n); // For defender to change first grid
+
+    void recieveHitDefender(int n); // For defender to change first grid
 
     void recieveKillAttacker(int size, int *ship); // For attacker to change second grid
 
