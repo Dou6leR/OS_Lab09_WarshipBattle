@@ -62,7 +62,7 @@ bool CShip::checkAllConection()
     return false;
 }
 
-QString CShip::getAllShipPositions()
+void CShip::getAllShipPositions()
 {
     QString positions = "";
     for(int i = 0; i < SHIPSNUM; i++)
@@ -71,7 +71,7 @@ QString CShip::getAllShipPositions()
             positions += QString::number(ships[i]->PositionOfShip[j]) + " ";
         positions += ",";
     }
-    return positions;
+    emit ShipPositions(positions);
 }
 
 void CShip::randomShipsPositions()
