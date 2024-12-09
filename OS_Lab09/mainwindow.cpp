@@ -87,7 +87,10 @@ void MainWindow::on_ready_but_clicked()
 }
 
 void MainWindow::put_in_log(QString log){
-    ui->server_log->setText(log);
+    //ui->server_log->setText(log);
+    ui->server_log->moveCursor(QTextCursor::End);
+    ui->server_log->textCursor().insertText("\n");
+    ui->server_log->textCursor().insertText(log);
 }
 
 void MainWindow::initShipsAndGrids()
