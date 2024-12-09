@@ -15,7 +15,7 @@ public:
 
     void SetCoolCursor();
 
-    void startRecievingShoots();
+
 
 private:
     void setDotsAroundKill(int x, int y, int size, bool isVertical);
@@ -41,6 +41,8 @@ public slots:
     void recieveKillAttacker(QVector<int> ship); // For attacker to change second grid
 
     void recieveKillDefender(QVector<int> ship); // For defender to change first grid
+
+    void startRecievingShoots(bool turn);
 signals:
     void sendCellToServer(int n); // send further to client/server
 };

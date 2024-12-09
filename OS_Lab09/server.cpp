@@ -146,10 +146,13 @@ void ServerController::process_server(){
         }
 
         bool turn = QRandomGenerator::global()->bounded(2);
+
         data = QString::number(READY_MSG) + " 1";
         m_server->send_data(client_sockets[turn], data);
+        m_server->put_in_log("Sent ready message: " + data);
         data = QString::number(READY_MSG) + " 0";
         m_server->send_data(client_sockets[!turn], data);
+        m_server->put_in_log("Sent ready message: " + data);
 
         while(true){
             data = m_server->receive_data(client_sockets[turn]);

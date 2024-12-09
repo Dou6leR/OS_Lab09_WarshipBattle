@@ -8,6 +8,8 @@
 #include <QString>
 #include <QObject>
 #include <QThread>
+#include <QMutex>
+#include <QWaitCondition>
 #include "exception.h"
 #include "my_message.h"
 
@@ -25,9 +27,33 @@ public:
     void client_init();
 signals:
     void wait_unlock();
+
+    void to_shooter_hit_msg(int position);
+    void to_shooter_miss_msg(int position);
+    void to_receiver_hit_msg(int position);
+    void to_receiver_miss_msg(int position);
+
+    void shooter_kill_msg(QVector<int> ship);
+    void receiver_kill_msg(QVector<int> ship);
+
+    void ready_msg(bool turn);
+
+    void win_lose_msg(bool win);
 public slots:
     void send_shoot(int n);
     void send_ship_positions(QString positions);
+
+    void s_to_shooter_hit_msg(int position);
+    void s_to_shooter_miss_msg(int position);
+    void s_to_receiver_hit_msg(int position);
+    void s_to_receiver_miss_msg(int position);
+
+    void s_shooter_kill_msg(QVector<int> ship);
+    void s_receiver_kill_msg(QVector<int> ship);
+
+    void s_ready_msg(bool turn);
+
+    void s_win_lose_msg(bool win);
 private:
     int client_socket;
     QString socket_path;

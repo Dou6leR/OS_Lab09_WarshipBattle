@@ -35,10 +35,6 @@ void CGrid::SetCoolCursor()
         shipField[i]->setCursor(QCursor(Qt::CrossCursor));
     }
 }
-void CGrid::startRecievingShoots()
-{
-    isMyTurn = true;
-}
 
 void CGrid::setDotsAroundKill(int x, int y, int size, bool isVertical)
 {
@@ -184,4 +180,9 @@ void CGrid::recieveKillDefender(QVector<int> ship)
             isVertical = true;
     setDotsAroundKill(x, y, ship.size(), isVertical);
     isMyTurn = false;
+}
+
+void CGrid::startRecievingShoots(bool turn)
+{
+    isMyTurn = turn;
 }

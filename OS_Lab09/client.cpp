@@ -61,7 +61,16 @@ void Client::client_init(){
     connect( client_ctrl, &ClientController::finished, thread, &QThread::quit);
     connect( client_ctrl, &ClientController::finished, client_ctrl, &ClientController::deleteLater);
     connect( thread, &QThread::finished, thread, &QThread::deleteLater);
-    connect(this, &Client::wait_unlock, client_ctrl, &ClientController::wait_unlock);
+    connect(this, &Client::wait_unlock, client_ctrl, &ClientController::wait_unlock, Qt::QueuedConnection);
+
+    connect(client_ctrl, &ClientController::to_receiver_hit_msg, this, &Client::s_to_receiver_hit_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::to_receiver_miss_msg, this, &Client::s_to_receiver_miss_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::receiver_kill_msg, this, &Client::receiver_kill_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::to_shooter_hit_msg, this, &Client::s_to_shooter_hit_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::to_shooter_miss_msg, this, &Client::s_to_shooter_miss_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::shooter_kill_msg, this, &Client::s_shooter_kill_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::ready_msg, this, &Client::s_ready_msg, Qt::QueuedConnection);
+
     thread->start();
 }
 
@@ -80,6 +89,7 @@ void ClientController::process_client(){
         int message_type = -1;
         QVector<int> ship_cord;
         do{
+            qDebug() << wait_for_msg;
             if(wait_for_msg){
                 qDebug() << "AAAAAAAAAA Entered waiting for message";
                 QString data = m_client->receive_data();
@@ -116,6 +126,7 @@ void ClientController::process_client(){
                     ship_cord.clear();
                     break;
                 case READY_MSG:
+                    qDebug() << data;
                     emit ready_msg(data_list[1].toInt());
                     if(data_list[1].toInt()){
                         wait_for_msg = false;
@@ -154,4 +165,47 @@ void Client::send_ship_positions(QString positions){
     qDebug() << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << data;
     send_data(data);
     emit wait_unlock();
+}
+
+
+void Client::s_to_shooter_hit_msg(int position)
+{
+    emit to_shooter_hit_msg(position);
+}
+
+void Client::s_to_shooter_miss_msg(int position)
+{
+    emit to_shooter_miss_msg(position);
+}
+
+void Client::s_to_receiver_hit_msg(int position)
+{
+    emit to_receiver_hit_msg(position);
+}
+
+void Client::s_to_receiver_miss_msg(int position)
+{
+    emit to_receiver_miss_msg(position);
+}
+
+void Client::s_shooter_kill_msg(QVector<int> ship)
+{
+    emit shooter_kill_msg(ship);
+}
+
+void Client::s_receiver_kill_msg(QVector<int> ship)
+{
+    emit receiver_kill_msg(ship);
+}
+
+void Client::s_ready_msg(bool turn)
+{
+    qDebug() << "My turn:";
+    qDebug() << turn;
+    emit ready_msg(turn);
+}
+
+void Client::s_win_lose_msg(bool win)
+{
+    emit win_lose_msg(win);
 }

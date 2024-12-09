@@ -84,8 +84,6 @@ void MainWindow::on_ready_but_clicked()
     ships->getAllShipPositions();
 
     switch_page(GAME_PAGE);
-    grid2->startRecievingShoots(); // In future move to server signal when all players are ready
-
 }
 
 void MainWindow::put_in_log(QString log){
@@ -136,4 +134,11 @@ void MainWindow::initShipsAndGrids()
 void MainWindow::connections_init(){
     connect(ui->random_but, &QPushButton::clicked, ships, &CShip::randomShipsPositions);
     connect(ships, &CShip::ShipPositions, client, &Client::send_ship_positions);
+    connect(client, &Client::to_shooter_hit_msg, grid2, &CGrid::recieveHitAttacker, Qt::QueuedConnection);
+    connect(client, &Client::to_shooter_miss_msg, grid2, &CGrid::recieveMissAttacker, Qt::QueuedConnection);
+    connect(client, &Client::shooter_kill_msg, grid2, &CGrid::recieveKillAttacker, Qt::QueuedConnection);
+    connect(client, &Client::to_receiver_hit_msg, grid1, &CGrid::recieveHitDefender, Qt::QueuedConnection);
+    connect(client, &Client::to_receiver_miss_msg, grid1, &CGrid::recieveMissDefender, Qt::QueuedConnection);
+    connect(client, &Client::receiver_kill_msg, grid1, &CGrid::recieveKillDefender, Qt::QueuedConnection);
+    connect(client, &Client::ready_msg, grid2, &CGrid::startRecievingShoots, Qt::QueuedConnection);
 }
