@@ -87,7 +87,33 @@ void MainWindow::on_ready_but_clicked()
 }
 
 void MainWindow::put_in_log(QString log){
-    ui->server_log->setText(log);
+    ui->server_log->moveCursor(QTextCursor::End);
+    ui->server_log->textCursor().insertText("\n");
+    ui->server_log->textCursor().insertText(get_log_date_time());
+    ui->server_log->textCursor().insertText(log);
+    ui->server_log->moveCursor(QTextCursor::End);
+}
+
+QString MainWindow::get_log_date_time()
+{
+    QString result = "[ ";
+    QDate date = QDate::currentDate();
+    QString s_date = QString("%1/%2/%3")
+                .arg( date.day(), 2, 10, QChar('0'))
+                .arg( date.month(), 2, 10, QChar('0'))
+                .arg( date.year(), 4, 10, QChar('0'));
+
+    result += s_date + " ";
+
+    QTime time = QTime::currentTime();
+    QString s_time = QString("%1:%2:%3:%4")
+                         .arg( time.hour(), 2, 10, QChar('0'))
+                         .arg( time.minute(), 2, 10, QChar('0'))
+                         .arg( time.second(), 2, 10, QChar('0'))
+                         .arg( time.msec(), 3, 10, QChar('0'));
+
+    result += s_time + " ] ";
+    return result;
 }
 
 void MainWindow::initShipsAndGrids()
