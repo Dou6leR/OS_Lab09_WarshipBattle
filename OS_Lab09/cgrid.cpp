@@ -146,6 +146,7 @@ void CGrid::recieveMissDefender(int n)
     qDebug() << "recieveMissDefender" << n;
     shipField[n]->changeType(_dot);
     isMyTurn = true;
+    qDebug() << "isMyTurn: " << isMyTurn;
 }
 
 void CGrid::recieveHitDefender(int n)

@@ -120,9 +120,17 @@ void ClientController::process_client(){
                     break;
                 case TO_SHOOTER_MISS_MSG:
                     emit to_shooter_miss_msg(data_list[1].toInt()); //ne lock
+                    mutex.lock();
+                    wait_for_msg = true;
+                    condition.wakeOne();
+                    mutex.unlock();
                     break;
                 case TO_RECEIVER_HIT_MSG:
                     emit to_receiver_hit_msg(data_list[1].toInt()); //ne lock
+                    mutex.lock();
+                    wait_for_msg = true;
+                    condition.wakeOne();
+                    mutex.unlock();
                     break;
                 case TO_RECEIVER_MISS_MSG:
                     emit to_receiver_miss_msg(data_list[1].toInt()); //lock
@@ -146,6 +154,10 @@ void ClientController::process_client(){
                     }
                     emit receiver_kill_msg(ship_cord);
                     ship_cord.clear();
+                    mutex.lock();
+                    wait_for_msg = true;
+                    condition.wakeOne();
+                    mutex.unlock();
                     break;
                 case READY_MSG:
                     qDebug() << data;
@@ -159,6 +171,7 @@ void ClientController::process_client(){
                     else{
                         mutex.lock();
                         wait_for_msg = true;
+                        condition.wakeOne();
                         mutex.unlock();
                     }
                     break;

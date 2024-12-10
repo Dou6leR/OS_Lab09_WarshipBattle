@@ -10,7 +10,27 @@
 #include <QThread>
 #include <QObject>
 #include <QRandomGenerator>
+#include <QVector>
 #include "my_message.h"
+
+class Fleet
+{
+public:
+    Fleet();
+    ~Fleet();
+    // [0] element is ignored
+    void set_fleet(QString source);
+    //0 - miss 1 - hit 2 - kill
+    int hit_if_exist(int coord);
+    // if kill use this
+    QString get_ship(int coord) const;
+    // ouput for log
+    QString output_fleet() const;
+private:
+    QVector<QVector<QPair<int, bool>>> ships;
+    bool is_killed(QVector<QPair<int, bool>> ship) const;
+};
+
 
 class Server : public QObject{
     Q_OBJECT
@@ -41,17 +61,21 @@ class ServerController : public QObject
     Q_OBJECT
 public:
     explicit ServerController(Server* server);
-    QVector<QMap<int,bool>> client1_ships;
-    QVector<QMap<int,bool>> client2_ships;
+    Fleet client1_ships;
+    Fleet client2_ships;
+
+    void send_message(int type, QString message, bool turn, QString message_prefix = "");
+    QString form_ship_return();
+
 public slots:
     void process_server();
+
 signals:
     void finished();
     void error(QString err);
 
     void log_signal(QString log);
 private:
-    bool check_killed(QMap<int,bool> ship);
     Server* m_server;
     QVector<int> client_sockets;
 };
