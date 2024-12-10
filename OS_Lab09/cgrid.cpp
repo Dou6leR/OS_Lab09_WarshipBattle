@@ -123,19 +123,19 @@ void CGrid::ChangeLabelText(int textType)
     {
     case YOUR_TURN:
         turnWinLabel->setText("Your turn!");
-        turnWinLabel->setStyleSheet("color: green;");
+        turnWinLabel->setStyleSheet("color: #3c7a3c;");
         break;
     case ENEMY_TURN:
         turnWinLabel->setText("Enemy turn!");
-        turnWinLabel->setStyleSheet("color: red;");
+        turnWinLabel->setStyleSheet("color: #7a3b3b;");
         break;
     case YOU_WIN:
-        turnWinLabel->setText("You win!");
-        turnWinLabel->setStyleSheet("color: green;");
+        turnWinLabel->setText("You WIN!");
+        turnWinLabel->setStyleSheet("color: #10a110;");
         break;
     case YOU_LOSE:
-        turnWinLabel->setText("You lose!");
-        turnWinLabel->setStyleSheet("color: red;");
+        turnWinLabel->setText("You LOSE!");
+        turnWinLabel->setStyleSheet("color: #960f0f;");
         break;
     default:
         break;
