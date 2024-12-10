@@ -120,9 +120,9 @@ void MainWindow::initShipsAndGrids()
 {
     scene = new QGraphicsScene;
 
-    grid1 = new CGrid(scene, CCell::SIZE, 3 * CCell::SIZE);
+    grid1 = new CGrid(scene, CCell::SIZE, 3 * CCell::SIZE, ui->turn_win_label);
     grid1->hide();
-    grid2 = new CGrid(scene, 14 * CCell::SIZE, 3 * CCell::SIZE);
+    grid2 = new CGrid(scene, 14 * CCell::SIZE, 3 * CCell::SIZE, ui->turn_win_label);
     ships = new CShip(scene, CCell::SIZE, CCell::SIZE);
 
     // fix for QGraphicScene
@@ -139,7 +139,6 @@ void MainWindow::connections_init(){
     connect(client, &Client::to_shooter_miss_msg, grid2, &CGrid::recieveMissAttacker, Qt::QueuedConnection);
     connect(client, &Client::shooter_kill_msg, grid2, &CGrid::recieveKillAttacker, Qt::QueuedConnection);
     connect(client, &Client::to_receiver_hit_msg, grid1, &CGrid::recieveHitDefender, Qt::QueuedConnection);
-    //connect(client, &Client::to_receiver_miss_msg, grid2, &CGrid::startRecievingShoots, Qt::QueuedConnection);
     connect(client, &Client::to_receiver_miss_msg, grid1, &CGrid::recieveMissDefender, Qt::QueuedConnection);
     connect(client, &Client::receiver_kill_msg, grid1, &CGrid::recieveKillDefender, Qt::QueuedConnection);
     connect(client, &Client::ready_msg, grid2, &CGrid::startRecievingShoots, Qt::QueuedConnection);

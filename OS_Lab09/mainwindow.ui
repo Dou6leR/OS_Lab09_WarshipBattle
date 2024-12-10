@@ -23,14 +23,14 @@
    <widget class="QStackedWidget" name="mw_pages">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>-30</x>
+      <y>10</y>
       <width>800</width>
       <height>550</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
@@ -225,6 +225,27 @@
        <cursorShape>ArrowCursor</cursorShape>
       </property>
      </widget>
+     <widget class="QLabel" name="turn_win_label">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>450</y>
+        <width>500</width>
+        <height>100</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Waiting for another player...</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -234,7 +255,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
