@@ -30,17 +30,24 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>200</y>
+        <y>290</y>
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>Server</string>
@@ -50,13 +57,23 @@
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>290</y>
+        <y>200</y>
         <width>200</width>
         <height>60</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Player</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="game_name">
@@ -67,6 +84,13 @@
         <width>200</width>
         <height>60</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="text">
        <string>SeaBattle</string>
@@ -80,19 +104,74 @@
      <widget class="QPushButton" name="ready_but">
       <property name="geometry">
        <rect>
+        <x>570</x>
+        <y>460</y>
+        <width>200</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Ready</string>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="placing_View">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>740</width>
+        <height>400</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="random_but">
+      <property name="geometry">
+       <rect>
         <x>30</x>
         <y>460</y>
         <width>200</width>
         <height>60</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans Bengali UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
-       <string>Ready</string>
+       <string>Random</string>
       </property>
      </widget>
     </widget>
     <widget class="QWidget" name="server_page">
-     <widget class="QPlainTextEdit" name="server_log">
+     <widget class="QTextEdit" name="server_log">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -100,6 +179,11 @@
         <width>740</width>
         <height>500</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Ubuntu Mono</family>
+       </font>
       </property>
       <property name="cursorWidth">
        <number>0</number>
@@ -109,7 +193,62 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="game_page"/>
+    <widget class="QWidget" name="game_page">
+     <widget class="QGraphicsView" name="game_View">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>740</width>
+        <height>400</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>740</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="cursor" stdset="0">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+     </widget>
+     <widget class="QLabel" name="turn_win_label">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>450</y>
+        <width>500</width>
+        <height>100</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Ubuntu</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Waiting for another player...</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -118,7 +257,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

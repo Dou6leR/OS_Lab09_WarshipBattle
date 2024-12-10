@@ -10,16 +10,21 @@ CONFIG += c++17
 
 SOURCES += \
     ccell.cpp \
+    cgrid.cpp \
     client.cpp \
+    cship.cpp \
     main.cpp \
     mainwindow.cpp \
     server.cpp
 
 HEADERS += \
     ccell.h \
+    cgrid.h \
     client.h \
+    cship.h \
     exception.h \
     mainwindow.h \
+    my_message.h \
     server.h
 
 FORMS += \
@@ -39,3 +44,6 @@ images/cell.png \
    images/sh_2.png \
    images/sh_3.png \
    images/sh_4.png
+
+RESOURCES += \
+    images.qrc

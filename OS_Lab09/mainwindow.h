@@ -7,6 +7,13 @@
 #include "client.h"
 #include <QMainWindow>
 #include <QPushButton>
+#include <QWidget>
+#include <QLabel>
+#include <QMessageBox>
+#include "cship.h"
+#include "cgrid.h"
+#include <QDate>
+#include <QTime>
 
 //UI managing
 #define W_WIDTH 800
@@ -29,18 +36,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void connect_client(Client* client);
-    void connect_server();
-    void send_to_server(Client* client);
-    void accept_client();
-    void receive_data(int id);
-    void send_client1();
-    void send_client2();
-    void receive_from_server(Client* new_client);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void switch_page(int page);
-
+    QString get_log_date_time();
 private slots:
     void on_server_but_clicked();
 
@@ -48,19 +47,25 @@ private slots:
 
     void on_ready_but_clicked();
 
+    void put_in_log(QString log);
 private:
     Ui::MainWindow *ui;
 
+    Client* client;
     Server* server;
-    QVector<int> client_sockets;
-    
+
     //Current scene
     QGraphicsScene  *scene;
 
     //All visible CCell items
-    QVector<CCell*> shipField1;
-    QVector<CCell*> shipField2;
-    QVector<CCell*> ships;
+    CGrid* grid1;
+    CGrid* grid2;
+    CShip* ships;
 
+    //Add all ships and 2 grids
+    void initShipsAndGrids();
+
+    void connections_init();
 };
+
 #endif // MAINWINDOW_H
