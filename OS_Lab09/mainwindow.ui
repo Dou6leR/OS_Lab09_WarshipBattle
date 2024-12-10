@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="welcome">
      <widget class="QPushButton" name="server_but">
@@ -124,7 +124,7 @@
      <widget class="QGraphicsView" name="placing_View">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>60</x>
         <y>30</y>
         <width>740</width>
         <height>400</height>
@@ -197,7 +197,7 @@
      <widget class="QGraphicsView" name="game_View">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>60</x>
         <y>30</y>
         <width>740</width>
         <height>400</height>

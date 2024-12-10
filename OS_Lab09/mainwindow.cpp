@@ -142,4 +142,6 @@ void MainWindow::connections_init(){
     connect(client, &Client::to_receiver_miss_msg, grid1, &CGrid::recieveMissDefender, Qt::QueuedConnection);
     connect(client, &Client::receiver_kill_msg, grid1, &CGrid::recieveKillDefender, Qt::QueuedConnection);
     connect(client, &Client::ready_msg, grid2, &CGrid::startRecievingShoots, Qt::QueuedConnection);
+    connect(client, &Client::win_msg, grid2, &CGrid::recieveWin, Qt::QueuedConnection);
+    connect(client, &Client::lose_msg, grid2, &CGrid::recieveLose, Qt::QueuedConnection);
 }
