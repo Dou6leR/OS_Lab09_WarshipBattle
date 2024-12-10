@@ -202,7 +202,7 @@ void ClientController::process_client(){
             emit receiver_kill_msg(ship_cord);
             ship_cord.clear();
 
-            emit lose_msg(lose_message(data_list[2]));
+            emit lose_msg(lose_message(data_list.last()));
         }
     }
     catch(std::exception exc)
