@@ -261,13 +261,14 @@ void ServerController::process_server(){
                 break;
 
             case 2:
-                send_message(SHOOTER_KILL_MSG, data_list[1], turn, "to shooter kill: ");
-                send_message(RECEIVER_KILL_MSG, data_list[1], !turn, "to receiver kill: ");
+                QString str_ship = (current_fleet->get_ship(coord));
+                send_message(SHOOTER_KILL_MSG, str_ship, turn, "to shooter kill: ");
+                send_message(RECEIVER_KILL_MSG, str_ship, !turn, "to receiver kill: ");
                 m_server->put_in_log("Kill:\n" + current_fleet->output_fleet());
                 break;
 
-            default:
-                break;
+            //default:
+                //break;
             }
         }
     }

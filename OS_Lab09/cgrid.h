@@ -15,13 +15,13 @@ public:
 
     void SetCoolCursor();
 
-
+    static bool *isMyTurn;
 
 private:
     void setDotsAroundKill(int x, int y, int size, bool isVertical);
 
     int receivedCell = -1;
-    bool isMyTurn = false;
+
     QGraphicsScene* scene;
     QVector<CCell*> shipField;
     QVector<CCell*> killOnTop;
