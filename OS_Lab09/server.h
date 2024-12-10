@@ -27,6 +27,7 @@ public:
     // ouput for log
     QString output_fleet() const;
     //check win condition
+    QString to_loser_msg(QString str_ship);
     bool is_win();
 private:
     QVector<QVector<QPair<int, bool>>> ships;

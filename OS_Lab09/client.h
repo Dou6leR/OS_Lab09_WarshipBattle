@@ -30,7 +30,6 @@ public:
     QString receive_data();
     void close_connection();
     void client_init();
-
 signals:
     void wait_unlock();
 
@@ -44,7 +43,8 @@ signals:
 
     void ready_msg(bool turn);
 
-    void win_lose_msg(bool win);
+    void win_msg();
+    void lose_msg(QVector<QVector<QPair<int,bool>>> remaining_ships);
 public slots:
     void send_shoot(int n);
     void send_ship_positions(QString positions);
@@ -59,7 +59,8 @@ public slots:
 
     void s_ready_msg(bool turn);
 
-    void s_win_lose_msg(bool win);
+    void s_win_msg();
+    void s_lose_msg(QVector<QVector<QPair<int,bool>>> remaining_ships);
 private:
     int client_socket;
     QString socket_path;
@@ -73,8 +74,9 @@ public:
 
     explicit ClientController(Client* client);
 
-
     Client* m_client;
+
+    QVector<QVector<QPair<int,bool>>> lose_message(QString);
 public slots:
     void wait_unlock();
     void process_client();
@@ -89,7 +91,8 @@ signals:
 
     void ready_msg(bool turn);
 
-    void win_lose_msg(bool win);  // 0 - lose, 1 - win
+    void win_msg();
+    void lose_msg(QVector<QVector<QPair<int,bool>>> remaining_ships);
 
     void finished();
     void error(QString err);

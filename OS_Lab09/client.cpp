@@ -73,6 +73,8 @@ void Client::client_init(){
     connect(client_ctrl, &ClientController::to_shooter_miss_msg, this, &Client::s_to_shooter_miss_msg, Qt::QueuedConnection);
     connect(client_ctrl, &ClientController::shooter_kill_msg, this, &Client::s_shooter_kill_msg, Qt::QueuedConnection);
     connect(client_ctrl, &ClientController::ready_msg, this, &Client::s_ready_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::win_msg, this, &Client::s_win_msg, Qt::QueuedConnection);
+    connect(client_ctrl, &ClientController::lose_msg, this, &Client::s_lose_msg, Qt::QueuedConnection);
 
     thread->start();
 }
@@ -95,6 +97,8 @@ void ClientController::process_client(){
         wait_for_msg = false;
         int message_type = -1;
         QVector<int> ship_cord;
+        QString data;
+        QList<QString> data_list;
         do{
             qDebug() << wait_for_msg;
             mutex.lock();
@@ -105,9 +109,9 @@ void ClientController::process_client(){
             mutex.unlock();
             if(wait_for_msg){
                 qDebug() << "AAAAAAAAAA Entered waiting for message";
-                QString data = m_client->receive_data();
+                data = m_client->receive_data();
                 qDebug() << "Receive response from server about shoot: "<< data;
-                QList<QString> data_list = data.split(" ");
+                data_list = data.split(" ");
                 message_type = data_list[0].toInt();
                 for(int i = 0; i < data_list.size(); i++)
                     qDebug() << i << ": " << data_list[i];
@@ -175,21 +179,51 @@ void ClientController::process_client(){
                         mutex.unlock();
                     }
                     break;
+                default:
+                    wait_for_msg = false;
+                    break;
                 }
             }
         }
         while((message_type != WIN_MSG) && (message_type != LOSE_MSG));
+
         if (message_type == WIN_MSG){
-            emit win_lose_msg(1);
+            for(int i = 1; i< data_list.size(); i++){       //lock
+                ship_cord.append(data_list[i].toInt());
+            }
+            emit shooter_kill_msg(ship_cord);
+            ship_cord.clear();
+            emit win_msg();
         }
         else{
-            emit win_lose_msg(0);
+            for(int i = 1; i < data_list.size()-1; i++){       //ne lock
+                ship_cord.append(data_list[i].toInt());
+            }
+            emit receiver_kill_msg(ship_cord);
+            ship_cord.clear();
+
+            emit lose_msg(lose_message(data_list[2]));
         }
     }
     catch(std::exception exc)
     {
         qDebug() << exc.what();
     }
+}
+
+QVector<QVector<QPair<int,bool>>> ClientController::lose_message(QString data){
+    QList<QString> remaining_ships_list = data.split("_");
+    QVector<QVector<QPair<int,bool>>> remaining_ships;
+    remaining_ships.resize(remaining_ships_list.size());
+    for(int i = 0; i < remaining_ships_list.size(); i++){
+        QList<QString> ship_list = remaining_ships_list[i].split(",");
+        for (int j = 0; j < ship_list.size(); j++)
+        {
+            QList<QString> cell_data = ship_list[j].split(":");
+            remaining_ships[i].append(QPair<int, bool>(cell_data[0].toInt(), cell_data[1].toInt()));
+        }
+    }
+    return remaining_ships;
 }
 
 void Client::send_shoot(int n){
@@ -257,7 +291,13 @@ void Client::s_ready_msg(bool turn)
     emit ready_msg(turn);
 }
 
-void Client::s_win_lose_msg(bool win)
+void Client::s_win_msg()
 {
-    emit win_lose_msg(win);
+    emit win_msg();
+}
+
+void Client::s_lose_msg(QVector<QVector<QPair<int,bool>>> remaining_ships)
+{
+
+    emit lose_msg(remaining_ships);
 }

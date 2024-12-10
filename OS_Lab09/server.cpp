@@ -139,6 +139,7 @@ int Fleet::hit_if_exist(int coord)
                 ships[i][j].second = true;
                 if (is_killed(ships[i]))
                 {
+                    num_of_killed++;
                     if(is_win())
                         return 3;
                     return 2;
@@ -158,7 +159,6 @@ bool Fleet::is_killed(QVector<QPair<int, bool>> ship)
             return false;
         }
     }
-    num_of_killed++;
     return true;
 }
 
@@ -206,22 +206,22 @@ void ServerController::process_server(){
         m_server->put_in_log("Second client accepted. Socket: " + QString::number(client_sockets[1]));
 
         // Converting char* message to QVector<QMap<int(position of ship), bool(true is hit)>>
-        QString data = m_server->receive_data(client_sockets[0]);
-        QList<QString> data_list = data.split(" ");
+        QString client1_ship_placement = m_server->receive_data(client_sockets[0]);
+        QList<QString> data_list = client1_ship_placement.split(" ");
         if (data_list[0].toInt() == SHIP_PLACEMENT_MSG){
-            client1_ships.set_fleet(data);
-            m_server->put_in_log("Player 1 sent right message. Ship placement: \n" + data);
+            client1_ships.set_fleet(client1_ship_placement);
+            m_server->put_in_log("Player 1 sent right message. Ship placement: \n" + client1_ship_placement);
         }
         else{
             m_server->put_in_log("Player 1 sent wrong type of message");
             throw Exception("Wrong type of message");
         }
 
-        data = m_server->receive_data(client_sockets[1]);
-        data_list = data.split(" ");
+        QString client2_ship_placement = m_server->receive_data(client_sockets[1]);
+        data_list = client2_ship_placement.split(" ");
         if (data_list[0].toInt() == SHIP_PLACEMENT_MSG){
-            client2_ships.set_fleet(data);
-            m_server->put_in_log("Player 2 sent right message. Ship placement: \n" + data);
+            client2_ships.set_fleet(client2_ship_placement);
+            m_server->put_in_log("Player 2 sent right message. Ship placement: \n" + client2_ship_placement);
         }
         else{
             m_server->put_in_log("Player 2 sent wrong type of message");
@@ -236,12 +236,14 @@ void ServerController::process_server(){
         // TO CHANGE
         bool turn = false ;//QRandomGenerator::global()->bounded(2);
 
-        data = QString::number(READY_MSG) + " 1";
+        QString data = QString::number(READY_MSG) + " 1";
         m_server->send_data(client_sockets[turn], data);
         m_server->put_in_log("Sent ready message: " + data);
         data = QString::number(READY_MSG) + " 0";
         m_server->send_data(client_sockets[!turn], data);
         m_server->put_in_log("Sent ready message: " + data);
+
+
 
         // TO CHANGE END
 
@@ -253,7 +255,8 @@ void ServerController::process_server(){
                 m_server->put_in_log("Wrong type of message " + data + "\nSocket: " + QString::number(client_sockets[turn]));
                 throw Exception("Wrong type of message");
             }
-            Fleet* current_fleet = turn ? &client1_ships : &client2_ships ;
+            Fleet* current_fleet = turn ? &client1_ships : &client2_ships;
+            Fleet* enemy_fleet = !turn ? &client1_ships : &client2_ships;
             int coord = data_list[1].toInt();
             int shoot_result = current_fleet->hit_if_exist(coord);
             QString str_ship;
@@ -280,13 +283,16 @@ void ServerController::process_server(){
                 break;
 
             case 3:
-                send_message(WIN_MSG, "", turn, "to shooter win: ");
-                send_message(LOSE_MSG, "", !turn, "to receiver lose: ");
-                m_server->put_in_log("Kill:\n" + current_fleet->output_fleet());
+                str_ship = (current_fleet->get_ship(coord));
+                send_message(WIN_MSG, str_ship, turn, "to shooter win: ");
+
+                send_message(LOSE_MSG, enemy_fleet->to_loser_msg(str_ship), !turn, "to receiver lose: ");
+
+                m_server->put_in_log("End of the game:\n" + current_fleet->output_fleet());
                 break;
 
-            //default:
-                //break;
+            default:
+                break;
             }
         }
     }
@@ -302,3 +308,47 @@ void ServerController::send_message(int type, QString message, bool turn, QStrin
     m_server->put_in_log(message_prefix + data + "\nSocket: " + QString::number(client_sockets[turn]));
     m_server->send_data(client_sockets[turn], data);
 }
+
+QString Fleet::to_loser_msg(QString str_ship){
+    QString data = str_ship + " ";
+    for (auto ship : ships){
+        if (!is_killed(ship)){
+            for(auto cell : ship){
+                data += QString::number(cell.first) + ":" + QString::number(cell.second) + ",";
+            }
+            data.removeLast();
+            data += "_";
+        }
+    }
+    return data.removeLast();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
