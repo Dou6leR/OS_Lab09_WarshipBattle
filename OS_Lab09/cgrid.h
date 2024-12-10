@@ -15,13 +15,13 @@ public:
 
     void SetCoolCursor();
 
-    void startRecievingShoots();
+    static bool *isMyTurn;
 
 private:
     void setDotsAroundKill(int x, int y, int size, bool isVertical);
 
     int receivedCell = -1;
-    bool isMyTurn = false;
+
     QGraphicsScene* scene;
     QVector<CCell*> shipField;
     QVector<CCell*> killOnTop;
@@ -38,9 +38,11 @@ public slots:
 
     void recieveHitDefender(int n); // For defender to change first grid
 
-    void recieveKillAttacker(int size, int *ship); // For attacker to change second grid
+    void recieveKillAttacker(QVector<int> ship); // For attacker to change second grid
 
-    void recieveKillDefender(int size, int *ship); // For defender to change first grid
+    void recieveKillDefender(QVector<int> ship); // For defender to change first grid
+
+    void startRecievingShoots(bool turn);
 signals:
     void sendCellToServer(int n); // send further to client/server
 };

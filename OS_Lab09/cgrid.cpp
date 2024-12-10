@@ -1,5 +1,5 @@
 #include "cgrid.h"
-
+bool* CGrid::isMyTurn = new bool(false);
 CGrid::CGrid(QGraphicsScene* in_scene, int PosX, int PosY, QObject *parent) : QObject(parent)
 {
     scene = in_scene;
@@ -9,7 +9,8 @@ CGrid::CGrid(QGraphicsScene* in_scene, int PosX, int PosY, QObject *parent) : QO
         for(int y = 0; y < 10; y++)
         {
             shipField[x + y * 10] = new CCell(_cell, 0);
-            connect(shipField[x + y * 10], &CCell::sendShootCoordinate, this, &CGrid::recieveClickedCell);
+            if(PosX != CCell::SIZE)
+                connect(shipField[x + y * 10], &CCell::sendShootCoordinate, this, &CGrid::recieveClickedCell);
             shipField[x + y * 10]->setPos(PosX + x * CCell::SIZE, PosY + y * CCell::SIZE);
             scene->addItem(shipField[x + y * 10]);
         }
@@ -34,10 +35,6 @@ void CGrid::SetCoolCursor()
     {
         shipField[i]->setCursor(QCursor(Qt::CrossCursor));
     }
-}
-void CGrid::startRecievingShoots()
-{
-    isMyTurn = true;
 }
 
 void CGrid::setDotsAroundKill(int x, int y, int size, bool isVertical)
@@ -122,66 +119,90 @@ void CGrid::setDotsAroundKill(int x, int y, int size, bool isVertical)
 
 void CGrid::recieveClickedCell(int n)
 {
-    if(isMyTurn) // Don't change received cell until server answered than receive next cell
+    if(*isMyTurn) // Don't change received cell until server answered than receive next cell
     {
-        isMyTurn = false;
+        *isMyTurn = false;
         receivedCell = n;
         emit sendCellToServer(receivedCell);
         qDebug() << n;
     }
 }
 
-void CGrid::recieveMissAttacker(int n)
+void CGrid::recieveMissAttacker(int n) // Grid2
 {
+    qDebug() << "recieveMissAttacker" << n;
     shipField[n]->changeType(_dot);
-    isMyTurn = false;
+    *isMyTurn = false;
 }
 
-void CGrid::recieveHitAttacker(int n)
+void CGrid::recieveHitAttacker(int n) // Grid2
 {
+    qDebug() << "recievehitAttacker" << n;
     shipField[n]->changeType(_hit);
-    isMyTurn = true;
+    *isMyTurn = true;
 }
 
-void CGrid::recieveMissDefender(int n)
+void CGrid::recieveMissDefender(int n) // Grid1
 {
+    qDebug() << "recieveMissDefender" << n;
     shipField[n]->changeType(_dot);
-    isMyTurn = true;
+    *isMyTurn = true;
 }
 
-void CGrid::recieveHitDefender(int n)
+void CGrid::recieveHitDefender(int n) // Grid1
 {
-    killOnTop.push_back(new CCell(_kill, 0));
-    killOnTop.last()->setPos(CCell::SIZE * (n % 10), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
+    killOnTop.push_back( new CCell(_cell_kill, 0));
+    killOnTop.last()->setPos(CCell::SIZE * (n % 10 + 1), 3 * CCell::SIZE + CCell::SIZE * (n / 10));
     scene->addItem(killOnTop.last());
-    isMyTurn = false;
+    *isMyTurn = false;
 }
 
-void CGrid::recieveKillAttacker(int size, int *ship)
+void CGrid::recieveKillAttacker(QVector<int> ship) // Grid2
 {
     bool isVertical = false;
     int x = ship[0] % 10;
     int y = ship[0] / 10;
-    if(size > 1)
+    if(ship.size() > 1)
         if((ship[1] - ship[0]) == 10)
             isVertical = true;
 
 
-    newShips.push_back(new CCell(size, 0));
+    newShips.push_back(new CCell(ship.size(), 0));
     newShips.last()->setPos(CCell::SIZE * (14 + x), CCell::SIZE * (3 + y));
+    if(isVertical)
+        newShips.last()->rotateShip();
     scene->addItem(newShips.last());
-    setDotsAroundKill(x, y, size, isVertical);
-    isMyTurn = true;
+    setDotsAroundKill(x, y, ship.size(), isVertical);
+    for(int i = 0; i < ship.size(); i++)
+    {
+        killOnTop.push_back( new CCell(_cell_kill, 0));
+        killOnTop.last()->setPos(CCell::SIZE * (x + 14), 3 * CCell::SIZE + CCell::SIZE * (y));
+        scene->addItem(killOnTop.last());
+        isVertical ? y++ : x++;
+    }
+    *isMyTurn = true;
 }
 
-void CGrid::recieveKillDefender(int size, int *ship)
+void CGrid::recieveKillDefender(QVector<int> ship) // Grid1
 {
     bool isVertical = false;
     int x = ship[0] % 10;
     int y = ship[0] / 10;
-    if(size > 1)
+    if(ship.size() > 1)
         if((ship[1] - ship[0]) == 10)
             isVertical = true;
-    setDotsAroundKill(x, y, size, isVertical);
-    isMyTurn = false;
+    setDotsAroundKill(x, y, ship.size(), isVertical);
+    for(int i = 0; i < ship.size(); i++)
+    {
+        killOnTop.push_back( new CCell(_cell_kill, 0));
+        killOnTop.last()->setPos(CCell::SIZE * (x + 1), 3 * CCell::SIZE + CCell::SIZE * (y));
+        scene->addItem(killOnTop.last());
+        isVertical ? y++ : x++;
+    }
+    *isMyTurn = false;
+}
+
+void CGrid::startRecievingShoots(bool turn)
+{
+    *isMyTurn = turn;
 }

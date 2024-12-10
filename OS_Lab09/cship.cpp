@@ -68,9 +68,11 @@ void CShip::getAllShipPositions()
     for(int i = 0; i < SHIPSNUM; i++)
     {
         for(int j = 0; j < ships[i]->_width / CCell::SIZE; j++)
-            positions += QString::number(ships[i]->PositionOfShip[j]) + " ";
-        positions += ",";
+            positions += QString::number(ships[i]->PositionOfShip[j]) + ",";
+        positions.removeAt(positions.size() - 1);
+        positions += " ";
     }
+    positions.removeAt(positions.size() - 1);
     emit ShipPositions(positions);
 }
 

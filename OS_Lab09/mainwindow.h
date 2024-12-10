@@ -12,6 +12,8 @@
 #include <QMessageBox>
 #include "cship.h"
 #include "cgrid.h"
+#include <QDate>
+#include <QTime>
 
 //UI managing
 #define W_WIDTH 800
@@ -37,7 +39,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void switch_page(int page);
-
+    QString get_log_date_time();
 private slots:
     void on_server_but_clicked();
 
@@ -45,6 +47,7 @@ private slots:
 
     void on_ready_but_clicked();
 
+    void put_in_log(QString log);
 private:
     Ui::MainWindow *ui;
 
@@ -62,6 +65,7 @@ private:
     //Add all ships and 2 grids
     void initShipsAndGrids();
 
+    void connections_init();
 };
 
 #endif // MAINWINDOW_H
