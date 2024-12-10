@@ -20,15 +20,18 @@ public:
     ~Fleet();
     // [0] element is ignored
     void set_fleet(QString source);
-    //0 - miss 1 - hit 2 - kill
+    //0 - miss 1 - hit 2 - kill 3 - win
     int hit_if_exist(int coord);
     // if kill use this
     QString get_ship(int coord) const;
     // ouput for log
     QString output_fleet() const;
+    //check win condition
+    bool is_win();
 private:
     QVector<QVector<QPair<int, bool>>> ships;
-    bool is_killed(QVector<QPair<int, bool>> ship) const;
+    bool is_killed(QVector<QPair<int, bool>> ship);
+    int num_of_killed = 0;
 };
 
 

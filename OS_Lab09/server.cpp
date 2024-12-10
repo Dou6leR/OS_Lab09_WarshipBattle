@@ -138,7 +138,11 @@ int Fleet::hit_if_exist(int coord)
             {
                 ships[i][j].second = true;
                 if (is_killed(ships[i]))
+                {
+                    if(is_win())
+                        return 3;
                     return 2;
+                }
                 else
                     return 1;
             }
@@ -147,14 +151,22 @@ int Fleet::hit_if_exist(int coord)
     return 0;
 }
 
-bool Fleet::is_killed(QVector<QPair<int, bool>> ship) const
+bool Fleet::is_killed(QVector<QPair<int, bool>> ship)
 {
     for(int j = 0; j < ship.count(); j++){
         if(ship[j].second == false){
             return false;
         }
     }
+    num_of_killed++;
     return true;
+}
+
+bool Fleet::is_win()
+{
+    if(num_of_killed == 10)
+        return true;
+    return false;
 }
 
 QString Fleet::get_ship(int coord) const
@@ -244,8 +256,8 @@ void ServerController::process_server(){
             Fleet* current_fleet = turn ? &client1_ships : &client2_ships ;
             int coord = data_list[1].toInt();
             int shoot_result = current_fleet->hit_if_exist(coord);
-
-            //0 - miss 1 - hit 2 - kill
+            QString str_ship;
+            //0 - miss 1 - hit 2 - kill 3 - win
             switch (shoot_result)
             {
             case 0:
@@ -261,9 +273,15 @@ void ServerController::process_server(){
                 break;
 
             case 2:
-                QString str_ship = (current_fleet->get_ship(coord));
+                str_ship = (current_fleet->get_ship(coord));
                 send_message(SHOOTER_KILL_MSG, str_ship, turn, "to shooter kill: ");
                 send_message(RECEIVER_KILL_MSG, str_ship, !turn, "to receiver kill: ");
+                m_server->put_in_log("Kill:\n" + current_fleet->output_fleet());
+                break;
+
+            case 3:
+                send_message(WIN_MSG, "", turn, "to shooter win: ");
+                send_message(LOSE_MSG, "", !turn, "to receiver lose: ");
                 m_server->put_in_log("Kill:\n" + current_fleet->output_fleet());
                 break;
 
