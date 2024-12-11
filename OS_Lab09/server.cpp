@@ -234,7 +234,7 @@ void ServerController::process_server(){
 
 
         // TO CHANGE
-        bool turn = false ;//QRandomGenerator::global()->bounded(2);
+        bool turn = QRandomGenerator::global()->bounded(2);
 
         QString data = QString::number(READY_MSG) + " 1";
         m_server->send_data(client_sockets[turn], data);
